@@ -1,0 +1,27 @@
+<h5 id="notice" class="font-weight-bolder"><%= notice %></h5>
+
+<h1 class="my-5 text-center font-weight-bolder">Detail Kelompok Barang</h1>
+
+<div class="row mx-0 px-5">
+  <div class="container py-4 px-5">
+    <form action="">
+
+      <div class="mb-3 row">
+        <label for="" class="col-sm-4 col-form-label font-weight-bolder">Kelompok Barang</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" value="<%= @item_group.kelompok_barang %>" readonly>
+        </div>
+      </div>
+
+      <div class="mb-3 justify-content-md-end">
+        <%= link_to 'Back', item_groups_path, class:"btn btn-secondary text-white btn-custom rounded-pill pull-left" %>
+
+        <%= link_to 'Edit', edit_item_group_path(@item_group), class:"btn btn-warning text-white btn-custom rounded-pill pull-right" %>
+      </div>
+    </form>
+  </div>
+</div>
+
+ 
+
+

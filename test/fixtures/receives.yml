@@ -1,0 +1,29 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  jenis: MyString
+  judul_bast: MyString
+  nomor_bast: MyString
+  tanggal_bast: 2021-09-08
+  nama_penyedia: MyString
+  nomor_po: MyString
+  tanggal_po: 2021-09-08
+  project_program: MyString
+  kode: MyString
+  nama: MyString
+  kode_akun: MyString
+  pemilik_material: MyString
+
+two:
+  jenis: MyString
+  judul_bast: MyString
+  nomor_bast: MyString
+  tanggal_bast: 2021-09-08
+  nama_penyedia: MyString
+  nomor_po: MyString
+  tanggal_po: 2021-09-08
+  project_program: MyString
+  kode: MyString
+  nama: MyString
+  kode_akun: MyString
+  pemilik_material: MyString

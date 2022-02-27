@@ -1,0 +1,10 @@
+<% if notification.target %>
+  <tr>
+    <td>
+      <%= notification.actor.name %> telah membuat data penjualan status draft <%= link_to notification&.target&.name, main_app.user_path(notification.target) %>
+    </td>
+    <td class="text-center" style="width: 150px">
+      <%= l notification.created_at, format: "%d %b %Y %H:%M:%S" %>
+    </td>
+  </tr>
+<% end %>

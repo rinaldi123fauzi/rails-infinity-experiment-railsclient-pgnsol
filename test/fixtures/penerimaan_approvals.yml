@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  receive: one
+  status: one
+  user: one
+  role: one
+  catatan_penerimaan: MyString
+
+two:
+  receive: two
+  status: two
+  user: two
+  role: two
+  catatan_penerimaan: MyString

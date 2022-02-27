@@ -1,0 +1,3 @@
+class Vendor < VendorRecord
+    
+end

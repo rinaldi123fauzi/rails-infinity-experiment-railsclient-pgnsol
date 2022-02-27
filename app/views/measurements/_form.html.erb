@@ -1,0 +1,31 @@
+<%= form_with(model: measurement, local: true) do |form| %>
+  <% if measurement.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(measurement.errors.count, "error") %> prohibited this measurement from being saved:</h2>
+
+      <ul>
+        <% measurement.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+    <% end %>
+
+  <div class="row mx-0 px-5">
+    <div class="container py-4 px-5">
+
+      <div class="mb-3 row">
+        <%= form.label :nama_satuan, class: "col-sm-4 col-form-label"  %>
+        <div class="col-sm-8">
+          <%= form.text_field :nama_satuan, class: "form-control" %>
+        </div>
+      </div>
+
+  
+
+          <div class="mb-6">
+           <div class="row"> 
+            <div class="col-sm-12">
+               <button class="btn btn-primary text-white btn-custom rounded-pill pull-right" data-dismiss="modal">Simpan</button>
+            <% end %>
+

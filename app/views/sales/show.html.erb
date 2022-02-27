@@ -1,0 +1,84 @@
+<h1 class="my-5 text-center font-weight-bold text-primary">Pengeluaran Barang Penjualan</h1>
+
+<div class="row mx-5 mb-3">
+    <div class="col-12">
+      <div class="navbar navbar-expand-sm menu-bar">
+<!--        <ul class="navbar-nav border-bottom border-top w-100">-->
+<!--          <li class="nav-item active">-->
+<!--            <a class="nav-link" href="#">Data</a>-->
+<!--          </li>-->
+<!--          <li class="nav-item">-->
+            <%#= link_to receives_path, class:"nav-link" do %>
+<!--              <span>Barang</span>-->
+            <%# end %>
+<!--          </li>-->
+<!--        </ul>-->
+       <ul class="nav navbar-nav border-bottom border-top w-100" id="myTab" role="tablist">
+          <li class="nav-item active" role="presentation">
+            <a class="nav-link" id="receive-tab" data-toggle="tab" href="#sale-home" role="tab" aria-controls="sale-home" aria-selected="true" value="data">Data</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" id="receive-item-tab" data-toggle="tab" href="#sale-item" role="tab" aria-controls="sale-item" aria-selected="false" value="barang">Barang</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" id="receive-item-tab" data-toggle="tab" href="#sale_detail_status" role="tab" aria-controls="sale_detail_status" aria-selected="false" value="detail">Detail Status</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+<div class="tab-content" id="myTabContent">
+  <%= render "sales/tab_bars/data"%>
+  <%= render "sales/tab_bars/barang"%>
+  <%= render "sales/tab_bars/detail_status"%>
+
+  <br>
+  <div class="d-grid gap-2 d-md-flex mx-5 mb-3 justify-content-md-end">
+    <%= render "sales/disposisi/user_trading" %>
+    <%= render "sales/disposisi/staff_gudang" %>
+  </div>
+    <%= render "sales/disposisi/kepala_gudang" %>
+    <%= render "sales/disposisi/admin_persediaan" %>
+    <%= render "sales/disposisi/kadep_persediaan" %>
+</div>
+  
+<script>
+    $('li').click(function() {
+        $('li.nav-item.active').removeClass("active");
+        $(this).addClass("active");
+    });
+    
+    $('#datatable-history').dataTable();
+
+    document.getElementById("status-validate").required = true;
+    
+    $('#formvalidate').submit(function (e, params) {
+            var localParams = params || {};
+
+            if (!localParams.send) {
+                e.preventDefault();
+            }
+
+                //additional input validations can be done hear
+
+        swal({
+                title: "Konfirmasi",
+                text: "Anda yakin submit data ini ?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#6A9944",
+                confirmButtonText: "Iya",
+                cancelButtonText: "Tidak",
+                closeOnConfirm: true
+            }, function (isConfirm) {
+                if (isConfirm) {
+                    $(e.currentTarget).trigger(e.type, { 'send': true });
+                } else {
+
+            //additional run on cancel  functions can be done hear
+
+                }
+        });
+    });
+</script>

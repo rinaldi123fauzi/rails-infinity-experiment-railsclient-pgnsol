@@ -1,0 +1,43 @@
+<% unless notice.blank? %>
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  <strong id="notice"><%= notice %></strong>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<% end %>
+
+<h1 class="my-5 text-center font-weight-bolder text-primary">Detail Data Gudang</h1>
+
+<div class="row mx-0 px-5">
+  <div class="container py-4 px-5">
+    <form action="">
+
+      <div class="mb-3 row">
+        <label for="" class="col-sm-4 col-form-label">Nama Gudang</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" value="<%= @warehouse.nama_gudang %>" readonly>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label for="" class="col-sm-4 col-form-label">Alamat Gudang</label>
+        <div class="col-sm-8">
+          <textarea name="" id="" cols="30" rows="10" class="form-control" value="test" readonly><%= @warehouse.alamat_gudang %></textarea>
+        </div>
+      </div>
+
+      <div class="mb-3 float-left">
+        <%= link_to 'Kembali', warehouses_path, class:"btn btn-secondary text-white btn-custom rounded-pill" %>
+      </div>
+      
+      <div class="mb-3 float-right">
+        <%= link_to 'Edit', edit_warehouse_path(@warehouse), class:"btn btn-warning text-white btn-custom rounded-pill" %>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+
+

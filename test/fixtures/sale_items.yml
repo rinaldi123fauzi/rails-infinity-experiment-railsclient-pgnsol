@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  jumlah_keluar: 1
+  item: one
+  jumlah_tersedia: 1
+  expenditure: one
+
+two:
+  jumlah_keluar: 1
+  item: two
+  jumlah_tersedia: 1
+  expenditure: two

@@ -1,0 +1,105 @@
+<%= form_with(model: receive_item, local: true) do |form| %>
+  <% if receive_item.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(receive_item.errors.count, "error") %> prohibited this receive_item from being saved:</h2>
+
+      <ul>
+      <% receive_item.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="row mx-0 px-5">
+    <div class="container py-4 px-5">
+
+          <div class="mb-3 row">
+            <%= form.label :nama_barang, "Nama Barang", class: "col-sm-4 col-form-label" %>
+            <div class="col-sm-8">
+              <%= form.collection_select :item_id, Item.all, :id, :searchItem, {prompt: "pilih nama barang"}, class: "form-control", id:"staff", required: true %>
+            </div>
+          </div>
+
+          <div class="mb-3 row">
+            <%= form.label :measurement_id, "Satuan", class: "col-sm-4 col-form-label" %>
+            <div class="col-sm-8">
+              <%= form.collection_select :measurement_id, Measurement.all, :id, :nama_satuan, {prompt: "pilih satuan"}, class: "form-control" %>
+            </div>
+          </div>
+
+          <div class="mb-3 row">
+            <%= form.label :harga_satuan, "Harga Satuan", class: "col-sm-4 col-form-label" %>
+            <div class="col-sm-8">
+             <% if params[:id].present? %>
+                <% getHargaSatuan = ReceiveItem.find(params[:id])%>
+                <input type="text" class="form-control" value="<%= number_to_currency(getHargaSatuan.harga_satuan, unit: "Rp. ", separator: ",", delimiter: ".")%>" id="negoprice_result"/>
+              <% else %>
+                <input type="text" class="form-control" id="negoprice_result"/>
+              <% end %>
+              <%= form.hidden_field :harga_satuan, class: "form-control", id:"harga_satuan", required: true %>
+            </div>
+          </div>
+
+          <div class="mb-3 row">
+            <%= form.label :jumlah_pesanan, "Jumlah Pesanan", class: "col-sm-4 col-form-label" %>
+            <div class="col-sm-8">
+              <%= form.number_field :jumlah_pesanan, class: "form-control", required: true %>
+            </div>
+          </div>
+
+          <div class="mb-3 row">
+            <%= form.label :jumlah_terima, "Jumlah Diterima", class: "col-sm-4 col-form-label" %>
+            <div class="col-sm-8">
+              <%= form.number_field :jumlah_terima, class: "form-control", id:"jumlah_terima", required: true %>
+              <%= form.hidden_field :jumlah_harga, class: "form-control", id:"jumlah_harga", required: true %>
+            </div>
+          </div>
+
+        <%= form.hidden_field :receive_id, value: params[:receive_id] %>
+      <%= form.hidden_field :status_item, value: "unchecked" %>
+
+        <% if @receive_item.jumlah_terima.blank? and @receive_item.harga_satuan.blank? %>
+
+          <% @getJumlahTerima = @receive_item.jumlah_terima.to_f %>
+          <% @getHargaSatuan = @receive_item.harga_satuan.to_f %>
+          <% @getJumlahHarga = @getJumlahTerima * @getHargaSatuan %>
+
+        <% end %>
+
+    </div>
+  </div>
+
+  <div class="col-sm-12">
+    <div class="mb-3 float-right">
+      <button class="btn btn-primary text-white btn-custom rounded-pill" data-dismiss="modal">Simpan</button>
+    </div>
+  </div>
+
+<% end %>
+
+<script>
+  $("#harga_satuan, #jumlah_terima").keyup(function() {
+      let harga_satuan = $("#harga_satuan").val();
+      let jumlah_terima = $("#jumlah_terima").val();
+
+      let jumlah_harga = parseInt(harga_satuan) * parseInt(jumlah_terima);
+      $("#jumlah_harga").val(jumlah_harga);
+  });
+
+  $('#staff').select2();
+  $('#negoprice_result').keyup(function(){
+      var value = (this.value.replace(/[^\/\d]/g, ''));
+      var bidprice = parseInt($('#clarification_negotiation_report_bidprice').val());
+      var negoprice = parseInt(value);
+      $('#harga_satuan').val(negoprice);
+      this.value = rupiah_formater(value, 'Rp. ');
+      var selisih = bidprice - negoprice;
+      $('#clarification_negotiation_report_negoprice_bidpricecorrected_gap').val(selisih);
+      selisih = selisih + "";
+      selisih = (selisih.replace(/[^\/\d]/g, ''));
+      selisih = rupiah_formater(selisih, 'Rp. ');
+      $('#negoprice_bidpricecorrected_gap').val(selisih);
+  });
+  $('#negoprice_result').val(rupiah_formater($('#negoprice_result').val(), 'Rp. '));
+</script>

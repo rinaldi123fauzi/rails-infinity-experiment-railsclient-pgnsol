@@ -1,0 +1,37 @@
+<%= form_with(model: sale_history, local: true) do |form| %>
+  <% if sale_history.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(sale_history.errors.count, "error") %> prohibited this sale_history from being saved:</h2>
+
+      <ul>
+      <% sale_history.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :catatan_penjualan %>
+    <%= form.text_field :catatan_penjualan %>
+  </div>
+
+  <div class="field">
+    <%= form.label :user_id %>
+    <%= form.text_field :user_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :status_id %>
+    <%= form.text_field :status_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :sale_id %>
+    <%= form.text_field :sale_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

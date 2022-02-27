@@ -1,0 +1,58 @@
+<% unless notice.blank? %>
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong id="notice"><%= notice %></strong>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+<% end %>
+
+<h1 class="my-5 text-center font-weight-bolder text-primary">Data Kelompok Barang</h1>
+
+<div class="row px-3">
+  <div class="col-12 mt-3 d-flex justify-content-right">
+    <%= link_to new_item_group_path, class:"btn btn-primary btn-custom rounded-pill text" do %>
+      <i id="my-icon" class="fas fa-plus"></i>
+      <span>Tambah Kelompok Barang</span>
+    <% end %>
+  </div>
+</div>
+<br>
+
+<div class="row mx-0">
+  <div class="col-12">
+    <table class="dataTable" class="table-responsive">
+      <table class="table table-bordered" id="dataTable">
+        <thead class="bg-primary">
+        <tr class="text-center">
+         <th style="width: 1%;">No</th>
+          <th class="align-middle" style="width: 25%;">Kelompok Barang</th>
+          <th class="align-middle" style="width: 10%;">Aksi</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <% @item_groups.each_with_index do |item_group, index| %>
+        <tr>
+        <td class="align-middle text-center"><%= index + 1 %></td>
+            <td class="align-middle text-center"><%= item_group.kelompok_barang %></td>
+            <td class="align-middle text-center">
+              <%= link_to item_group,  class:"btn btn-warning btn-sm rounded-circle text-white py-1 mb-1 px-2" do %>
+                <i class="fas fa-eye"></i>
+              <% end %>
+              <%= link_to edit_item_group_path(item_group),  class:"btn btn-success btn-sm rounded-circle text-white py-1 mb-1 px-2" do  %>
+                <i class="fas fa-pencil-alt"></i>
+              <% end %>
+              <%= link_to item_group, method: :delete, class:"btn btn-danger btn-sm rounded-circle text-white py-1 mb-1 px-2",
+                          data: { confirm: 'Are you sure?' } do %>
+                <i class="fas fa-trash"></i>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<br>

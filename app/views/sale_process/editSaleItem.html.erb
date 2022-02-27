@@ -1,0 +1,249 @@
+<h1 class="my-5 text-center font-weight-bold text-primary">Form Edit Item Barang</h1>
+
+<%= form_for :sale_process, url: sale_process_updateItemBarang_path, method: :post, html: {class: "form-horizontal", role: "form"} do |form| %>
+    <div class="row mx-0 px-5">
+        <div class="container py-4 px-5">
+             <% 
+                @filterBarang = ReceiveItem.where(receive_id: @sale_item.receive_item.receive_id).select('*') 
+                f = []
+                @filterBarang.each do |item|
+                    f[item.item_id.to_i] = item.item_id
+                end    
+            %>
+
+            <div class="mb-3 row">
+                <%= form.label "Nama Barang", class: "col-sm-4 col-form-label" %>
+                <div class="col-sm-8">
+                    <select class="form-control" id="nama-barang">
+                        <% Item.where('id IN (?)', f).each do |item|%>
+                            <% 
+                                @getItem = ReceiveItem.find(@sale_item.receive_item_id)
+                                if @getItem.item_id.to_s.match(/^#{item.id}$/) 
+                                    @selected = "selected"
+                                end
+                            
+                            %>
+                            <option value="<%= item.id %>" <%= @selected %>><%= getDetailItem(item.id) %></option>
+                        <% end %>
+                    </select>
+                </div>
+            </div>
+
+            
+            <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label">Kode QR</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="qrcode" readonly>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label">Satuan</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="satuan" readonly>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label">Lokasi Penempatan</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="lokasi-penempatan" readonly>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label">Lokasi Gudang</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="lokasi-gudang" readonly>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label">Jumlah Tersedia</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="jumlah-diterima" readonly>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label">Jumlah Dikeluarkan</label>
+                <div class="col-sm-8">
+                    <input type="number" name="jumlah_dikeluarkan" class="form-control" value="<%= @sale_item.jumlah_permintaan%>" required>
+                </div>
+            </div>
+
+            <input type="hidden" name="id_receive_item" id="id-receive-item">
+            <input type="hidden" name="id_measurement" id="id-measurement">
+            <input type="hidden" name="id_warehouse" id="id-warehouse">
+            <input type="hidden" name="id_sale_item" value="<%= params[:id]%>">
+            <input type="hidden" name="id_sale" value="<%= @sale_item.sale_id %>">
+            
+            <div class="mb-6">
+                <div class="row">
+                    <div class="col-sm-4">
+                    </div>
+                    <div class="col-sm-4">
+                    </div>
+
+                    <div class="col-sm-12">
+                        <div class="mb-3 float-right">
+                            <button class="btn btn-primary text-white btn-custom rounded-pill" data-dismiss="modal">Simpan</button>
+                        </div>
+                        <button class="btn btn-secondary text-white btn-custom rounded-pill pull-left" data-dismiss="modal">Kembali</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<% end %>
+
+<script type="text/javascript">
+    $('#nama-barang').select2();
+    jQuery(function () {
+        var id = $('#nama-barang').val();
+        $.getJSON("/sales/" +id+ "/getDetailReceiveItem",
+        function ( callback ) {
+            if (callback != "error"){
+            // console.log(callback)
+            for (var i = 0; i < callback.length; i++){
+                var obj = callback[i];
+                if (obj == null){
+                    $("#qrcode").empty();
+                    $("#satuan").empty();
+                    $("#lokasi-penempatan").empty();
+                    $("#lokasi-gudang").empty();
+                    $("#jumlah-diterima").empty();
+                    $("#id-receive-item").empty();
+                    $("#id-measurement").empty();
+                    $("#id-warehouse").empty();
+                } else{
+                    $("#id-receive-item").empty();
+                    var idreceiveitem = obj['idreceiveitem']
+                        // ...use `element`...
+                    $("#id-receive-item").val(idreceiveitem);
+                    
+                    $("#id-measurement").empty();
+                    var idmeasurement = obj['idmeasurement']
+                        // ...use `element`...
+                    $("#id-measurement").val(idmeasurement);
+
+
+                    $("#id-warehouse").empty();
+                    var idwarehouse = obj['idwarehouse']
+                        // ...use `element`...
+                    $("#id-warehouse").val(idwarehouse);
+
+                    $("#qrcode").empty();
+                    var qrcode = obj['qrcode']
+                        // ...use `element`...
+                    $("#qrcode").val(qrcode);
+
+                    $("#satuan").empty();
+                    var satuan = obj['satuan']
+                        // ...use `element`...
+                    $("#satuan").val(satuan);
+
+                    $("#lokasi-penempatan").empty();
+                    var lokasipenempatan = obj['lokasipenempatan']
+                        // ...use `element`...
+                    $("#lokasi-penempatan").val(lokasipenempatan);
+
+                    $("#lokasi-gudang").empty();
+                    var lokasigudang = obj['lokasigudang']
+                        // ...use `element`...
+                    $("#lokasi-gudang").val(lokasigudang);
+
+                    $("#jumlah-diterima").empty();
+                    var jumlahtersedia = obj['jumlahtersedia']
+                        // ...use `element`...
+                    $("#jumlah-diterima").val(jumlahtersedia);
+
+                    // $("#harga-ex-ppn").empty();
+                    // $("#real-harga-ex-ppn").empty();
+                    // var harga_ex_ppn = obj['jumlahharga']
+                    //     // ...use `element`...
+                    // $("#real-harga-ex-ppn").val(harga_ex_ppn);
+                    // $('#harga-ex-ppn').val(rupiah_formater($("#real-harga-ex-ppn").val(), 'Rp. '));
+                }
+            }
+            }
+        });
+    });
+
+    namaBarang();
+    function namaBarang() {
+        $('#nama-barang').change(function(){
+            if ($(this).val() !== '') {
+                var id = $(this).val();
+                $.getJSON("/sales/" +id+ "/getDetailReceiveItem",
+                function ( callback ) {
+                    if (callback != "error"){
+                    // console.log(callback)
+                    for (var i = 0; i < callback.length; i++){
+                        var obj = callback[i];
+                        if (obj == null){
+                            $("#qrcode").empty();
+                            $("#satuan").empty();
+                            $("#lokasi-penempatan").empty();
+                            $("#lokasi-gudang").empty();
+                            $("#jumlah-diterima").empty();
+                            $("#id-receive-item").empty();
+                            $("#id-measurement").empty();
+                            $("#id-warehouse").empty();
+                        } else{
+                            $("#id-receive-item").empty();
+                            var idreceiveitem = obj['idreceiveitem']
+                                // ...use `element`...
+                            $("#id-receive-item").val(idreceiveitem);
+                            
+                            $("#id-measurement").empty();
+                            var idmeasurement = obj['idmeasurement']
+                                // ...use `element`...
+                            $("#id-measurement").val(idmeasurement);
+
+
+                            $("#id-warehouse").empty();
+                            var idwarehouse = obj['idwarehouse']
+                                // ...use `element`...
+                            $("#id-warehouse").val(idwarehouse);
+
+                            $("#qrcode").empty();
+                            var qrcode = obj['qrcode']
+                                // ...use `element`...
+                            $("#qrcode").val(qrcode);
+
+                            $("#satuan").empty();
+                            var satuan = obj['satuan']
+                                // ...use `element`...
+                            $("#satuan").val(satuan);
+
+                            $("#lokasi-penempatan").empty();
+                            var lokasipenempatan = obj['lokasipenempatan']
+                                // ...use `element`...
+                            $("#lokasi-penempatan").val(lokasipenempatan);
+
+                            $("#lokasi-gudang").empty();
+                            var lokasigudang = obj['lokasigudang']
+                                // ...use `element`...
+                            $("#lokasi-gudang").val(lokasigudang);
+
+                            $("#jumlah-diterima").empty();
+                            var jumlahtersedia = obj['jumlahtersedia']
+                                // ...use `element`...
+                            $("#jumlah-diterima").val(jumlahtersedia);
+
+                            // $("#harga-ex-ppn").empty();
+                            // $("#real-harga-ex-ppn").empty();
+                            // var harga_ex_ppn = obj['jumlahharga']
+                            //     // ...use `element`...
+                            // $("#real-harga-ex-ppn").val(harga_ex_ppn);
+                            // $('#harga-ex-ppn').val(rupiah_formater($("#real-harga-ex-ppn").val(), 'Rp. '));
+                        }
+                    }
+                    }
+                });
+            }
+        });
+    }
+</script>
+

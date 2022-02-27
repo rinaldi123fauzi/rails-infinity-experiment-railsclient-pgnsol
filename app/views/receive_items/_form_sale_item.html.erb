@@ -1,0 +1,53 @@
+<%= form_with(model: receive_item, local: true) do |form| %>
+  <% if receive_item.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(receive_item.errors.count, "error") %> prohibited this receive_item from being saved:</h2>
+
+      <ul>
+      <% receive_item.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="row mx-0 px-5">
+    <div class="container py-4 px-5">
+
+        <% if current_user.roles.any? { |r| r.name == 'User Komersial' } %>
+
+        <div class="mb-3 row">
+          <%= form.label :jumlah_permintaan, "Jumlah Permintaan", class: "col-sm-4 col-form-label" %>
+          <div class="col-sm-8">
+            <%= form.number_field :jumlah_permintaan, class: "form-control", required: true %>
+          </div>
+          <%= form.hidden_field :receive_id, value: @receive_item.receive_id %>
+          <%= form.hidden_field :status_item, :value => 'checked', id: "status_item" %>
+        </div>
+
+      <% elsif current_user.roles.any? { |r| r.name == 'Staff Gudang' } %>
+
+        <div class="mb-3 row">
+          <%= form.label :jumlah_keluar, "Jumlah Dikeluarkan", class: "col-sm-4 col-form-label" %>
+          <div class="col-sm-8">
+            <%= form.number_field :jumlah_keluar, class: "form-control", required: true %>
+          </div>
+          <%= form.hidden_field :receive_id, value: @receive_item.receive_id %>
+        </div>
+
+      <% end %>
+
+        <div class="col-sm-12">
+          <div class="mb-3 float-right">
+            <%= link_to 'Back', sales_path, class:"btn btn-secondary text-white btn-custom rounded-pill" %>
+<!--            <button class="btn btn-secondary text-white btn-custom rounded-pill" onclick="history.back()">Kembali</button>-->
+
+            <button class="btn btn-primary text-white btn-custom rounded-pill" data-dismiss="modal">Simpan</button>
+
+          </div>
+        </div>
+
+    </div>
+  </div>
+
+<% end %>

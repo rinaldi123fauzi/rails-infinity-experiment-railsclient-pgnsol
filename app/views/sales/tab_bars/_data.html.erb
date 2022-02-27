@@ -1,0 +1,96 @@
+<div class="tab-pane fade show active" id="sale-home" role="tabpanel" aria-labelledby="data-tab">
+    <div class="row mx-0 px-5">
+      <div class="container py-4 px-5">
+        <div class="mb-3 row">
+          <label for="" class="col-sm-4 col-form-label font-weight-bolder">Nomor Pengeluaran </label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" value="<%= @sale.nomor_penjualan %>" readonly>
+          </div>
+        </div>
+
+        <div class="mb-3 row">
+          <label for="" class="col-sm-4 col-form-label font-weight-bolder">Tanggal Pengeluaran </label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" value="<%= @sale.tanggal_penjualan %>" readonly>
+          </div>
+        </div>
+
+        <div class="mb-3 row">
+          <label for="" class="col-sm-4 col-form-label font-weight-bolder">Jenis Pengeluaran</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="jenis_pengeluaran" value="<%= @sale.jenis_pengeluaran %>" readonly>
+          </div>
+        </div>
+
+        <div class="mb-3 row">
+          <label for="" class="col-sm-4 col-form-label font-weight-bolder">Nama Inputer</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" value="<%= @sale.nama_inputer %>" readonly>
+          </div>
+        </div>
+
+<!--        <div class="mb-3 row" id="kode-program-fast">-->
+<!--          <label for="" class="col-sm-4 col-form-label font-weight-bolder">Kode Proyek</label>-->
+<!--          <div class="col-sm-8">-->
+<!--            <input type="text" class="form-control" value="<%#= @sale.kode_proyek %>" readonly>-->
+<!--          </div>-->
+<!--        </div>-->
+
+        <div class="mb-3 row" id="nama-program-fast">
+          <label for="" class="col-sm-4 col-form-label font-weight-bolder">Kode <%= @sale.kategori_kode.camelize %></label>
+          <div class="col-sm-8">
+              <input type="text" class="form-control" value="<%= @sale.kode_proyek %>" readonly>
+          </div>
+          </div>
+
+          <div class="mb-3 row" id="nama-program-fast">
+          <label for="" class="col-sm-4 col-form-label font-weight-bolder">Nama <%= @sale.kategori_kode.camelize %></label>
+          <div class="col-sm-8">
+              <input type="text" class="form-control" value="<%= @sale.nama_proyek %>" readonly>
+          </div>
+        </div>
+
+        <div class="mb-3 row">
+          <label for="" class="col-sm-4 col-form-label font-weight-bolder">Kode Akun</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" value="<%= @sale.kode_akun %>" readonly>
+          </div>
+        </div>
+
+        <div class="mb-3 row">
+          <label for="" class="col-sm-4 col-form-label font-weight-bolder">Nama Akun</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" value="<%= @sale.nama_akun %>" readonly>
+          </div>
+        </div>
+
+        <div class="mb-3 row" id="">
+          <label for="" class="col-sm-4 col-form-label font-weight-bolder">keterangan Penjualan</label>
+          <div class="col-sm-8">
+            <textarea name="" id="" cols="30" rows="10" class="form-control" readonly><%= @sale.catatan_penjualan %></textarea>
+          </div>
+        </div>
+
+        <div class="mb-3 row">
+          <label for="" class="col-sm-4 col-form-label font-weight-bolder">Dokumen Penjualan</label>
+          <div class="col-sm-8">
+            <% if @sale.dokumen_penjualan.blank? %>
+            <h5 class="text-danger">tidak ada dokumen yg di upload</h5>
+            <%  else  %>
+              <% @sale.dokumen_penjualan.each do |d|  %>
+                <%=  text_field :sale, :dokumen_penjualan, multiple: true, value: d.identifier, class:"form-control", :readonly => true  %>
+                <%=  link_to "Download disini", @sale.dokumen_penjualan[0].url, :target => "_blank"  %>
+              <%  end  %>
+            <%  end %>
+          </div>
+        </div>
+
+        <div class="mb-3 justify-content-md-end">
+        <%= link_to 'Back', sales_path, class:"btn btn-warning text-white btn-custom rounded-pill" %>
+          <% if current_user.roles.any? { |r| r.name == 'superadmin' || r.name == 'User Trading' } %>
+        <%= link_to 'Edit', edit_sale_path(@sale), class:"btn btn-info text-white btn-custom rounded-pill mr-2" %>
+        <% end %>
+            </div>
+      </div>
+    </div>
+</div>

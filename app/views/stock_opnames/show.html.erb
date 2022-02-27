@@ -1,0 +1,54 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Kode qr code:</strong>
+  <%= @stock_opname.kode_qr_code %>
+</p>
+
+<p>
+  <strong>Item:</strong>
+  <%= @stock_opname.item %>
+</p>
+
+<p>
+  <strong>Tanggal:</strong>
+  <%= @stock_opname.tanggal %>
+</p>
+
+<p>
+  <strong>Jumlah tersedia:</strong>
+  <%= @stock_opname.jumlah_tersedia %>
+</p>
+
+<p>
+  <strong>Measurement:</strong>
+  <%= @stock_opname.measurement %>
+</p>
+
+<p>
+  <strong>Lokasi penempatan:</strong>
+  <%= @stock_opname.lokasi_penempatan %>
+</p>
+
+<p>
+  <strong>Jumlah fisik:</strong>
+  <%= @stock_opname.jumlah_fisik %>
+</p>
+
+<p>
+  <strong>Selisih:</strong>
+  <%= @stock_opname.selisih %>
+</p>
+
+<p>
+  <strong>Keterangan:</strong>
+  <%= @stock_opname.keterangan %>
+</p>
+
+<p>
+  <strong>Warehouse:</strong>
+  <%= @stock_opname.warehouse %>
+</p>
+
+<%= link_to 'Edit', edit_stock_opname_path(@stock_opname) %> |
+<%= link_to 'Back', stock_opnames_path %>

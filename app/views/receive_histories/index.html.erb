@@ -1,0 +1,54 @@
+<% unless notice.blank? %>
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  <strong id="notice"><%= notice %></strong>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<% end %>
+
+<% if current_user.roles.any? { |r| r.name == 'Staff Gudang'} %>
+  <h1 class="my-4 text-center font-weight-bolder">Penerimaan Barang</h1>
+<% else %>
+  <h1 class="my-4 text-center font-weight-bolder">Penerimaan Approvals</h1>
+<% end %>
+<div class="row mx-0">
+  <div class="col-12">
+    <div class="table-responsive">
+      <table class="table table-bordered" id="dataTable">
+        <thead class="bg-primary">
+          <tr class="text-center">
+           <th style="width: 1%;">No</th>
+            <th>Kode Transaksi</th>
+            <th>Tanggal Transaksi</th>
+            <th>Status</th>
+            <th>Inputer</th>
+            <th>Catatan penerimaan</th>
+            <th>Keterangan</th>
+            <th>Status Approval</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% @receive_histories.each do |receive_history| %>
+            <tr>
+              <td class="align-middle text-center">
+               <input type="checkbox" value="" id="defaultCheck1">
+                </td>
+              <td><%= receive_history.receive.try(:kode_transaksi_penerimaan) %></td>
+              <td><%= receive_history.receive.created_at.try(:strftime, "%Y-%m-%d") %></td>
+              <td><%= receive_history.status.try(:nama_status) %></td>
+              <% @getInputer = Receive.find(receive_history.receive_id) %>
+              <td><%= @getInputer.try(:inputer) %></td>
+              <td><%= receive_history.catatan_penerimaan %></td>
+              <td><%= receive_history.try(:status_approval) %></td>
+              <td><%= receive_history.role.try(:name) %></td>
+              <td><%= link_to 'Detail', detailApproval_path(receive_history.id) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+

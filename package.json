@@ -1,0 +1,7 @@
+{
+  "name": "new_project",
+  "private": true,
+  "dependencies": {
+    "chart.js": "^3.6.0"
+  }
+}

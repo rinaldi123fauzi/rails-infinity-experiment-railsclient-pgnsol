@@ -1,0 +1,97 @@
+<p id="notice"><%= notice %></p>
+
+<h1 class="my-5 text-center font-weight-bolder text-primary">Penerimaan Material</h1>
+
+
+<div class="row mx-5 mb-3">
+  <div class="col-12">
+    <div class="navbar navbar-expand-sm menu-bar">
+      <ul class="navbar-nav border-bottom border-top w-100">
+        <li class="nav-item active">
+          <a class="nav-link" href="preview_approve_data_kadep.html">Data</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="preview_approve_material_kadep.html">Material</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="preview_approve_detail_status_kadep.html">Detail Status</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="row px-5">
+  <div class="col mx-3 mt-4 d-flex justify-content-center" style="overflow-y:auto">
+    <div style="height: 320px;">
+      <table class="data-overview">
+        <tr>
+          <td class="title">Kode Transaksi Penerimaan</td>
+          <td class="text">Disesuaikan dengan aturan kode pada penerimaan </td>
+        </tr>
+        <tr>
+          <td class="title">Tanggal Transaksi</td>
+          <td class="text">14 Juli 2021 </td>
+        </tr>
+        <tr>
+          <td class="title">Jenis Penerimaan</td>
+          <td class="text">Pengadaan</td>
+        </tr>
+        <tr>
+          <td class="title">Judul BAST/DO</td>
+          <td class="text">Pembelian Barang Proyek Rokan</td>
+        </tr>
+        <tr>
+          <td class="title">Nomor BAST/DO</td>
+          <td class="text">BAST-001-2021</td>
+        </tr>
+        <tr>
+          <td class="title">Tanggal BAST/DO</td>
+          <td class="text">12 Juli 2021</td>
+        </tr>
+        <tr>
+          <td class="title">Jumlah Harga BAST/DO (ex-ppn)</td>
+          <td class="text">Rp. 540.000.000,00</td>
+        </tr>
+        <tr>
+          <td class="title">Nama Penyedia Material</td>
+          <td class="text">PT Aroma Kopi Kontraktor</td>
+        </tr>
+        <tr>
+          <td class="title">Nomor PO</td>
+          <td class="text">PO-001-2021</td>
+        </tr>
+        <tr>
+          <td class="title">Tanggal PO</td>
+          <td class="text">12 Juli 2021</td>
+        </tr>
+        <tr>
+          <td class="title">Kode Proyek</td>
+          <td class="text">Ambil Dari Komersil</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+<div class="row mb-3 px-2">
+  <div class="col p-2 pl-4 bg-gradient-primary text-white">
+    <h5>Status Penerimaan Material</h5>
+  </div>
+</div>
+
+<form>
+  <div class="row px-5 g-2 mx-5 mb-2" id="riwayat-permintaan">
+    <div class="col-2">
+      Catatan :
+    </div>
+    <div class="col-10">
+      <textarea class="form-control" id="exampleFormControlTextarea1" rows="4"></textarea>
+    </div>
+  </div>
+  <div class="d-grid gap-2 d-md-flex px-5 mx-5 mb-4 justify-content-md-end">
+    <button class="btn btn-danger btn-custom rounded-pill mr-md-2" type="button"
+            data-toggle="modal" data-target="#rejectPenerimaanModal">Reject</button>
+    <button class="btn btn-success btn-custom rounded-pill" type="button" data-toggle="modal"
+            data-target="#approvePenerimaanModal">Approve</button>
+  </div>
+</form>

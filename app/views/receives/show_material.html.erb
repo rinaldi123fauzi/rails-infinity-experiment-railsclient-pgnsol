@@ -1,0 +1,179 @@
+<p id="notice"><%= notice %></p>
+
+
+<h1 class="my-5 text-center font-weight-bolder">Penerimaan Material</h1>
+<div class="row mx-5 mb-3">
+  <div class="col-12">
+    <div class="navbar navbar-expand-sm menu-bar">
+      <ul class="navbar-nav border-bottom border-top w-100">
+        <li class="nav-item">
+          <%= link_to 'Data', receives_path %>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Material</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="row mx-0 px-5">
+  <!-- <h4 class="mb-2">Input Data Penerimaan</h4> -->
+  <div class="container py-4 px-5">
+    <form action="">
+      <div class="mb-3 row">
+        <label for="kodeTransaksiPenerimaan" class="col-sm-4 col-form-label">Kode Transaksi
+          Penerimaan</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="kodeTransaksiPenerimaan"
+                 value="Disesuaikan dengan aturan kode pada penerimaan (otomatis by sistem)"
+                 readonly>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label for="tanggalTransaksi" class="col-sm-4 col-form-label">Tanggal
+          Transaksi</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="tanggalTransaksi"
+                 value="<%= @receive.created_at.strftime("%D") %>" readonly>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label for="jenisPenerimaan" class="col-sm-4 col-form-label">Jenis Penerimaan</label>
+        <div class="col-sm-8">
+          <input type="text" readonly="readonly" class="form-control" value="<%= @receive.jenis %>">
+        </div>
+      </div>
+
+
+      <div class="mb-3 row">
+        <label for="judulBASTDO" class="col-sm-4 col-form-label">Judul BAST/DO</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" value="<%= @receive.judul_bast %>" readonly>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label for="nomorBASTDO" class="col-sm-4 col-form-label">Nomor BAST/DO</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" value="<%= @receive.nomor_bast %>" readonly>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label for="tanggalBASTDO" class="col-sm-4 col-form-label">Tanggal BAST/DO</label>
+        <div class="col-sm-8">
+          <input type="date" class="form-control" value="<%= @receive.tanggal_bast %>" readonly>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label for="jumlahHargaBASTDO" class="col-sm-4 col-form-label">Jumlah Harga BAST/DO
+          (ex ppn)</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="jumlahHargaBASTDO"
+                 value="Rp. 540.000.000,00" readonly>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label for="namaPenyediaMaterial" class="col-sm-4 col-form-label">Nama Penyedia
+          Material</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="namaPenyediaMaterial"
+                 value="PT Aroma Kopi Kontraktor" readonly>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label for="nomorPO" class="col-sm-4 col-form-label">Nomor PO</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" value="<%= @receive.nomor_po %>" readonly>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label for="tanggalPO" class="col-sm-4 col-form-label">Tanggal PO</label>
+        <div class="col-sm-8">
+          <input type="date" class="form-control" id="tanggalPO" value="<%= @receive.tanggal_po %>" readonly>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label for="kodeProyek" class="col-sm-4 col-form-label">Kode Proyek</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="kodeProyek"
+                 value="ambil dari komersial" readonly>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label for="namaProyek" class="col-sm-4 col-form-label">Nama Proyek</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="namaProyek"
+                 value="Proyek Pipa Rokan (otomatis dari aplikasi Komersial)" readonly>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label for="kodeAkun" class="col-sm-4 col-form-label">Kode Akun</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="kodeAkun" value="<%= @receive.kode_akun %>" readonly>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label for="pemilikMaterial" class="col-sm-4 col-form-label">Pemilik
+          Material</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="kodeAkun" value="<%= @receive.pemilik_material %>" readonly>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label for="uploadFile" class="col-sm-4 col-form-label">Upload File</label>
+        <div class="col-sm-8">
+          <p class="m-0">
+            <a href="#"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
+
+            <span class="upload-file-name">BAST Pembelian Barang Proyek Rokan.pdf</span>
+          </p>
+        </div>
+      </div>
+
+      <div class="col-sm-12">
+        <div class="mb-3 float-right">
+        <%= link_to 'Kembali', receives_path, class:"btn btn-secondary text-white btn-custom rounded-pill pull-right" %>
+
+        <%= link_to 'Edit', edit_receive_path(@receive), class:"btn btn-warning text-white btn-custom rounded-pill pull-left" %>
+
+        <button class="btn btn-info text-white btn-custom rounded-pill" type="submit">Next
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<!--<p>-->
+<!--  <strong>Nama penyedia:</strong>-->
+  <%#= @receive.nama_penyedia %>
+<!--</p>-->
+
+<!--<p>-->
+<!--  <strong>Project program:</strong>-->
+  <%#= @receive.project_program %>
+<!--</p>-->
+
+<!--<p>-->
+<!--  <strong>Kode:</strong>-->
+  <%#= @receive.kode %>
+<!--</p>-->
+
+<!--<p>-->
+<!--  <strong>Nama:</strong>-->
+  <%#= @receive.nama %>
+<!--</p>-->
+

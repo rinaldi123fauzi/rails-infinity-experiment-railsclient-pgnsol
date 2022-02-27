@@ -1,0 +1,143 @@
+<style type="text/css">
+  body {
+    font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+    font-size: 11px;
+    color: black;
+  }
+
+  .ibox-title {
+    font-size: 10px;
+    font-style: italic;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+
+  .in-table tr td,
+  .in-table tr th {
+    border-collapse: collapse;
+    border: 1px solid black;
+    padding: 3px;
+  }
+
+  .in-table tr th {
+    background-color: #c6d9f0;
+  }
+
+  .in-table table {
+    border: 0px;
+    margin-top: 5px;
+  }
+
+  .bottom-table tr td {
+    border-collapse: collapse;
+    border: 1px solid black;
+    padding-left: 3px;
+  }
+
+  table, tr, td, th, tbody, thead, tfoot {
+    page-break-inside: avoid !important;
+  }
+</style>
+
+<div class="ibox">
+    <div class="ibox-content" style="display: block;">
+        <div class="print-area" style="padding: 15px 30px;">
+            <table class="bottom-table">
+                <tr>
+                    <td width="400" height="100"><div style="margin: 5px; margin-left: 20px;"><%= wicked_pdf_image_tag 'pgn.png', :height=>50 %></div></td>
+                    <td colspan="3">
+                        <h3 style="text-align: center; margin-top: 15px;font-size: 18px;"><b>FORMULIR PENERIMAAN BARANG</b> </h3>
+                    </td>
+                </tr>
+            </table>
+            <br>
+            <table border="0">
+                <tr>
+                    <td width="230">Kode Transaksi Penerimaan</td>
+                    <td width="15">:</td>
+                    <td><%= @getReceive.try(:kode_transaksi_penerimaan)%></td>
+                </tr>
+                <tr>
+                    <td>Tanggal Penerimaan</td>
+                    <td>:</td>
+                    <td><%= "#{@getReceive.tanggal_po.strftime("%d")} #{get_month_name(@getReceive.tanggal_po.strftime('%-m'))} #{@getReceive.tanggal_po.strftime("%Y")}"%></td>
+                </tr>
+                <tr>
+                    <td>Klien / Unit Kerja</td>
+                    <td>:</td>
+                    <%
+                        @getDivision = Division.find(@getReceive.division_id)
+                    %>
+                    <td><%= @getDivision.try(:nama_divisi)%></td>
+                </tr>
+                <tr>
+                    <td>Gudang</td>
+                    <td>:</td>
+                    <td><%= @getReceive.warehouse.try(:nama_gudang)%></td>
+                </tr>
+            </table>
+            <br>
+            <style>
+              table thead tr th{
+                font-weight: normal;
+              }
+              table tbody tr th{
+                font-weight: normal;
+              }
+            </style>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Kode Akun</th>
+                        <th>Nama Barang</th>
+                        <th>Kode QR</th>
+                        <th>Pemilik</th>
+                        <th>Kode <%= @getReceive.kode_proyek.present? ? "Proyek" : "Program" %></th>
+                        <th>Satuan</th>
+                        <th>Jumlah <br> Dipesan</th>
+                        <th>Jumlah <br> Diterima</th>
+                        <th>Harga Satuan</th>
+                        <th>Jumlah Harga</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% ReceiveItem.where(receive_id: @getReceive.id).each do |receive_item| %>
+                        <tr>
+                            <td style="text-align: center;" width="90"><%= @getReceive.try(:kode_akun)%></td>
+                            <td style="padding-top: 5px; padding-left: 10px;" width="300">
+                                <%= getDetailItem(receive_item.item_id) %>
+                            </td>
+                            <td style="text-align: center;" width="130"><%= receive_item.try(:qr_code)%></td>
+                            <% @dataDivisi = Division.find(receive_item.receive.division_id) %>
+                            <td style="text-align: center;" width="120"><%= @dataDivisi.try(:nama_divisi) %></td>
+                            <td style="text-align: center;" width="150"><%= @getReceive.kode_proyek.present? ? @getReceive.kode_proyek : @getReceive.kode_program %></td>
+                            <td style="text-align: center;" width="60"><%= receive_item.measurement.try(:nama_satuan)%></td>
+                            <td style="text-align: center;" width="80"><%= receive_item.try(:jumlah_pesanan)%></td>
+                            <td style="text-align: center;" width="80"><%= receive_item.try(:jumlah_terima)%></td>
+                            <td style="text-align: right;" width="165"><%= number_to_currency(receive_item.try(:harga_satuan), unit: "", separator: ",", delimiter: ".")%></td>
+                            <td style="text-align: right;" width="165"><%= number_to_currency(receive_item.try(:jumlah_harga), unit: "", separator: ",", delimiter: ".")%></td>
+                        </tr>
+                    <% end %>
+                    <tr>
+                      <th colspan="8" height="50" style="text-align: left; border-color: transparent; padding-left: 10px;">Keterangan</th>
+                      <th style="border: 1px solid black;">Kepala Departemen <br>
+                          Persediaan</th>
+                      <th>Kepala Gudang</th>
+                      <tr>
+                        <td colspan="8" height="100" style="padding-left: 10px;">
+                          <% @getCatatan = Receive.find(@getReceive.id) %>
+                          <%= @getCatatan.try(:catatan)%>
+                        </td>
+                        <td height="100" style="text-align: center;"><%= wicked_pdf_image_tag 'approved-logo-png-5.png', :height=>70 %></td>
+                        <td height="100" style="text-align: center;"><%= wicked_pdf_image_tag 'approved-logo-png-5.png', :height=>70 %></td>
+                      </tr>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

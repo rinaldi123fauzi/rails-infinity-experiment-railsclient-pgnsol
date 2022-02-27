@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  nomor_pengeluaran: 1
+  tanggal_pengeluaran: 2021-11-23
+  jenis_pengeluaran: MyString
+  keterangan_pengeluaran: MyString
+  status: one
+  warehouse: one
+  user: one
+  kode_proyek: MyString
+  dokumen_pengeluaran: 
+
+two:
+  nomor_pengeluaran: 1
+  tanggal_pengeluaran: 2021-11-23
+  jenis_pengeluaran: MyString
+  keterangan_pengeluaran: MyString
+  status: two
+  warehouse: two
+  user: two
+  kode_proyek: MyString
+  dokumen_pengeluaran: 

@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  jenis_kode_biaya: MyString
+  kode_proyek: MyString
+  nama_proyek: MyString
+  item: one
+  measurement: one
+  jumlah_tersedia: 1
+  jumlah_keluar: 1
+
+two:
+  jenis_kode_biaya: MyString
+  kode_proyek: MyString
+  nama_proyek: MyString
+  item: two
+  measurement: two
+  jumlah_tersedia: 1
+  jumlah_keluar: 1

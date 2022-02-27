@@ -1,0 +1,273 @@
+<div class="row mx-0 px-5">
+  <div class="container py-4 px-5">
+    <%= form_for @retur, html: { class: 'form-horizontal' } do |f| %>
+
+      <div class="mb-3 row">
+        <%= f.label :jenis_penerimaan, 'Jenis Penerimaan', class: "col-sm-4 col-form-label"  %>
+        <div class="col-sm-8">
+          <%= f.text_field :jenis_penerimaan, class: "form-control", value: "Retur", readonly: true %>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <%= f.label :no_pengeluaran, 'No Pengeluaran*', class: "col-sm-4 col-form-label"  %>
+        <div class="col-sm-8">
+          <% if @retur.new_record? %>
+            <select data-placeholder="Pilih Nomor Pengeluaran" class="form-control" name="retur[no_pengeluaran]" id="no_pengeluaran" data-live-search="true" onclick="pengeluaran()">
+                <%= raw(getNoPengeluaran)%>
+            </select>
+          <% else %>
+            <select data-placeholder="Pilih Nomor Pengeluaran" class="form-control" name="retur[no_pengeluaran]" id="no_pengeluaran" data-live-search="true" onclick="pengeluaran()">
+                <% if @retur.no_pengeluaran.present? %>
+                  <%= raw(getNoPengeluaranParams(@retur.no_pengeluaran))%>
+                <% else %>
+                  <%= raw(getNoPengeluaran)%>
+                <% end %>
+            </select>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <%= f.label :kode_proyek, 'Kode & Proyek', class: "col-sm-4 col-form-label"  %>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="kode_proyek_dan_nama_proyek" disabled>
+          <%= f.hidden_field :kode_proyek, class: "form-control", id: "kode_proyek", readonly: true %>
+          <%= f.hidden_field :nama_proyek, class: "form-control", id: "nama_proyek", readonly: true %>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <%= f.label :jenis_pengeluaran, 'Jenis Pengeluaran', class: "col-sm-4 col-form-label"  %>
+        <div class="col-sm-8">
+          <%= f.text_field :jenis_pengeluaran, class: "form-control", id: "jenis_pengeluaran", readonly: true %>
+        </div>
+      </div>
+
+      <!--
+      <div class="mb-3 row">
+          <%= f.label :nama_proyek, 'Nama Proyek', class: "col-sm-4 col-form-label"  %>
+          <div class="col-sm-8">
+            <%= f.hidden_field :nama_proyek, class: "form-control", id: "nama_proyek", readonly: true %>
+            <%= f.hidden_field :kode_proyek, class: "form-control", id: "kode_proyek_id", readonly: true %>
+          </div>
+      </div>
+      -->
+
+      <div class="mb-3 row">
+        <%= f.label :asal_gudang, 'Asal Gudang', class: "col-sm-4 col-form-label"  %>
+        <div class="col-sm-8">
+          <%= f.text_field :asal_gudang, class: "form-control", id: "asal_gudang", readonly: true %>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <%= f.label :gudang_pengembalian, 'Gudang Pengembalian*', class: "col-sm-4 col-form-label"  %>
+        <div class="col-sm-8">
+          <% if @retur.new_record? %>
+            <select data-placeholder="Pilih Gudang" class="form-control" name="retur[gudang_pengembalian]" id="gudang_pengembalian" data-live-search="true">
+                <%= raw(getGudangPengembalian)%>
+            </select>
+          <% else %>
+            <select data-placeholder="Pilih Gudang" class="form-control" name="retur[gudang_pengembalian]" id="gudang_pengembalian" data-live-search="true">
+                <% if @retur.no_pengeluaran.present? %>
+                  <%= raw(getGudangPengembalianParams(@retur.gudang_pengembalian))%>
+                <% else %>
+                  <%= raw(getGudangPengembalian)%>
+                <% end %>
+            </select>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <%= f.label :nama_inputer, 'Nama Inputer*', class: "col-sm-4 col-form-label"  %>
+        <div class="col-sm-8">
+          <%= f.text_field :nama_inputer, class: "form-control", required: true %>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <%= f.label :file, 'Upload File', class: "col-sm-4 col-form-label font-wheight-bolder"  %>
+        
+        <div class="col-sm-8">
+          <%= f.file_field :file, id:"upload-file-id", class: "form-control", multiple: true %>
+          <label for="upload-file-id">Optional</label>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <%= f.label :keterangan_retur, 'Keterangan Retur*', class: "col-sm-4 col-form-label"  %>
+        <div class="col-sm-8">
+          <%= f.text_area :keterangan_retur, class: "form-control", required: true %>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12 col-sm-offset-2 mb-3">
+          <button type=submit class="btn btn-primary text-white btn-custom rounded-pill pull-right">Simpan</button>
+        
+
+    <% end %>
+ 
+
+<!-- <%= form_with(model: retur, local: true) do |form| %>
+  <% if retur.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(retur.errors.count, "error") %> prohibited this retur from being saved:</h2>
+
+      <ul>
+      <% retur.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :jenis_penerimaan %>
+    <%= form.text_field :jenis_penerimaan %>
+  </div>
+
+  <div class="field">
+    <%= form.label :no_pengeluaran %>
+    <%= form.text_field :no_pengeluaran %>
+  </div>
+
+  <div class="field">
+    <%= form.label :kode_proyek %>
+    <%= form.text_field :kode_proyek %>
+  </div>
+
+  <div class="field">
+    <%= form.label :nama_proyek %>
+    <%= form.text_field :nama_proyek %>
+  </div>
+
+  <div class="field">
+    <%= form.label :jenis_pengeluaran %>
+    <%= form.text_field :jenis_pengeluaran %>
+  </div>
+
+  <div class="field">
+    <%= form.label :asal_gudang %>
+    <%= form.text_field :asal_gudang %>
+  </div>
+
+  <div class="field">
+    <%= form.label :gudang_pengembalian %>
+    <%= form.text_field :gudang_pengembalian %>
+  </div>
+
+  <div class="field">
+    <%= form.label :nama_inputer %>
+    <%= form.text_field :nama_inputer %>
+  </div>
+
+  <div class="field">
+    <%= form.label :file %>
+    <%= form.text_field :file %>
+  </div>
+
+  <div class="field">
+    <%= form.label :keterangan_retur %>
+    <%= form.text_field :keterangan_retur %>
+  </div>
+
+        <div class="row">
+          <div class="col-sm-12 col-sm-offset-2 mb-3">
+            <%= link_to 'Back', roles_path, class: 'btn btn-secondary pull-left btn-custom rounded-pill' %>
+            <button type=submit class="btn btn-primary text-white btn-custom rounded-pill pull-right">Save</button>
+           </div>
+        </div>
+
+<% end %>
+</div>
+  </div>
+</div> -->
+
+<script>
+    $('#selectAll').click(function() {
+        if (this.checked) {
+            $(':checkbox').each(function() {
+                this.checked = true;
+            });
+        } else {
+            $(':checkbox').each(function() {
+                this.checked = false;
+            });
+        }
+    });
+    $('#no_pengeluaran').select2();
+    $('#gudang_pengembalian').select2();
+  
+    pengeluaran();
+    function pengeluaran() {
+      $('#no_pengeluaran').change(function(){
+      var id = $(this).val();
+       $.getJSON("/returs/" +id+ "/getPengeluaran",
+        function ( callback ) {
+        if (callback != "error"){
+            // console.log(callback)
+            for (var i = 0; i < callback.length; i++){
+              var obj = callback[i];
+                if (obj == null){
+                  $("#jenis_pengeluaran").empty();
+                  $("#asal_gudang").empty();
+                  $("#kode_proyek_dan_nama_proyek").empty();
+                  $("#kode_proyek").empty();
+                  $("#nama_proyek").empty();
+                } else{
+                  $("#jenis_pengeluaran").empty();
+                  var status_tiket = obj['value']
+                      // ...use `element`...
+                  $("#jenis_pengeluaran").val(status_tiket);
+
+                  $("#asal_gudang").empty();
+                  var status_tiket = obj['asal_gudang']
+                      // ...use `element`...
+                  $("#asal_gudang").val(status_tiket);
+
+                  $("#kode_proyek_dan_nama_proyek").empty();
+                  $("#kode_proyek").empty();
+                  $("#nama_proyek").empty();
+                  var kode_proyek = obj['kode_proyek']
+                  var nama_proyek = obj['nama_proyek']
+                      // ...use `element`...
+                  $("#kode_proyek_dan_nama_proyek").val(kode_proyek +" | "+ nama_proyek);
+                  $("#kode_proyek").val(kode_proyek);
+                  $("#nama_proyek").val(nama_proyek);
+
+                }
+            }
+        }
+        });
+      });
+    }
+
+
+    jQuery(function () {
+      var no_pengeluaran = $('#no_pengeluaran').val();
+      // console.log(kategori);
+      <% unless @retur.new_record? %>
+        $.getJSON("/returs/" +no_pengeluaran+ "/getPengeluaran",
+          function ( callback ) {
+          if (callback != "error"){
+              // console.log(callback)
+              for (var i = 0; i < callback.length; i++){
+                var obj = callback[i];
+                  if (obj == null){
+                  $("#kode_proyek_dan_nama_proyek").empty();
+                } else{
+                  $("#kode_proyek_dan_nama_proyek").empty();
+                  var kode_proyek = obj['kode_proyek']
+                  var nama_proyek = obj['nama_proyek']
+                      // ...use `element`...
+                  $("#kode_proyek_dan_nama_proyek").val(kode_proyek +" | "+ nama_proyek);
+                }
+              }
+          }
+        });
+      <% end %>
+    });
+</script>

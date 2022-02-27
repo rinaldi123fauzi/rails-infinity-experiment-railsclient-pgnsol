@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Receive:</strong>
+  <%= @receive_item.receive %>
+</p>
+
+<p>
+  <strong>Item:</strong>
+  <%= @receive_item.item %>
+</p>
+
+<%= link_to 'Edit', edit_receive_item_path(@receive_item) %> |
+<%= link_to 'Kembali', receive_items_path %>

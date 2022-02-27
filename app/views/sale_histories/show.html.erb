@@ -1,0 +1,248 @@
+<p id="notice"><%= notice %></p>
+
+<h1 class="my-5 text-center font-weight-bolder">Pengeluaran Barang Penjualan</h1>
+
+<div class="row mx-5 mb-3">
+  <h5 class="my-5 text-center font-weight-bolder">Input Pengeluaran Barang Penjualan</h5>
+  <div class="col-12">
+    <div class="navbar navbar-expand-sm menu-bar">
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <a class="nav-link active" id="data-pengeluaran-penjualan-tab" data-toggle="tab" href="#data-pengeluaran-penjualan" role="tab" aria-controls="data-pengeluaran" aria-selected="true">Data Pengeluaran</a>
+        </li>
+        <li class="nav-item" role="presentation">
+          <a class="nav-link" id="data-barang-pengeluaran-penjualan-tab" data-toggle="tab" href="#data-barang-pengeluaran-penjualan" role="tab" aria-controls="data-barang" aria-selected="false">Data Barang</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="data-pengeluaran-penjualan" role="tabpanel" aria-labelledby="data-pengeluaran-penjualan-tab">
+    <div class="row mx-0 px-5">
+      <div class="container py-4 px-5">
+
+        <div class="mb-3 row">
+          <label for="" class="col-sm-4 col-form-label font-weight-bolder">Tanggal Pengeluaran </label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" value="<%= @sale.tanggal_penjualan %>" readonly>
+          </div>
+        </div>
+
+        <div class="mb-3 row">
+          <label for="" class="col-sm-4 col-form-label font-weight-bolder">Jenis Pengeluaran</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="jenis_pengeluaran" value="<%= @sale.jenis_pengeluaran %>" readonly>
+          </div>
+        </div>
+
+        <div class="mb-3 row">
+          <label for="" class="col-sm-4 col-form-label font-weight-bolder">Nama Inputer</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="jenis_pengeluaran" value="<%= @sale.nama_inputer %>" readonly>
+          </div>
+        </div>
+
+        <div class="mb-3 row">
+          <label for="" class="col-sm-4 col-form-label font-weight-bolder">Jenis Kode Biaya</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="jenis_pengeluaran" value="<%= @sale.jenis_kode_biaya %>" readonly>
+          </div>
+        </div>
+
+        <div class="mb-3 row" id="kode-program-fast">
+          <label for="" class="col-sm-4 col-form-label font-weight-bolder">Kode Program Fast</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" value="<%= @sale.kode_program_fast %>" readonly>
+          </div>
+        </div>
+
+        <div class="mb-3 row" id="nama-program-fast">
+          <label for="" class="col-sm-4 col-form-label font-weight-bolder">Nama Program Fast</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" value="<%= @sale.nama_program_fast %>" readonly>
+          </div>
+        </div>
+
+        <div class="mb-3 row" id="">
+          <label for="" class="col-sm-4 col-form-label font-weight-bolder">keterangan Pengeluaran</label>
+          <div class="col-sm-8">
+            <textarea name="" id="" cols="30" rows="10" class="form-control" readonly><%= @sale.keterangan_penjualan %></textarea>
+          </div>
+        </div>
+
+        <div class="mb-3 row">
+          <label for="" class="col-sm-4 col-form-label font-weight-bolder">Dokumen Penjualan</label>
+          <div class="col-sm-8">
+            <% if @sale.dokumen_penjualan.blank? %>
+              <h5 class="text-danger">tidak ada dokumen yg di upload</h5>
+            <%  else  %>
+              <% @sale.dokumen_penjualan.each do |d|  %>
+                <%=  text_field :sale, :dokumen_penjualan, multiple: true, value: d.identifier, class:"form-control", :readonly => true  %>
+                <%=  link_to "Download disini", @sale.dokumen_penjualan[0].url, :target => "_blank"  %>
+              <%  end  %>
+            <%  end %>
+          </div>
+        </div>
+
+        <div class="mb-3 justify-content-md-end">
+          <%#= link_to 'Back', sales_path, class:"btn btn-warning text-white btn-custom rounded-pill" %>
+          <%#= link_to 'Edit', edit_sale_path(@sale), class:"btn btn-info text-white btn-custom rounded-pill mr-2" %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="tab-pane fade" id="data-barang-pengeluaran-penjualan" role="tabpanel" aria-labelledby="data-barang-pengeluaran-penjualan-tab">
+    <div class="row mx-0 px-5">
+      <button type="button" class="btn btn-primary btn-custom rounded-pill mr-md-2" data-toggle="modal" data-target="#tambahBarangPengeluaran">tambah barang</button>
+      <div class="col-12">
+        <br>
+        <div class="table-responsive">
+          <table class="table table-bordered" id="dataTable">
+            <thead class="bg-primary">
+            <tr class="text-center">
+              <th class="align-middle" style="width: 8%;">Kode Barang</th>
+              <th class="align-middle" style="width: 24%;">Nama Barang</th>
+              <th class="align-middle" style="width: 7%;">Satuan</th>
+              <th class="align-middle" style="width: 11%;">Jumlah Tersedia</th>
+              <% if current_user.roles.any? { |r| r.id == 1 || r.id == 8 } %>
+                <th class="align-middle" style="width: 11%;">Jumlah Dikeluarkan</th>
+                <th class="align-middle" style="width: 11%;">Lokasi Penempatan</th>
+              <% end %>
+              <th class="align-middle" style="width: 7%;">Gudang</th>
+              <th class="align-middle" style="width: 10%;">Aksi</th>
+            </tr>
+            </thead>
+            <% @sale_items.each do |sale_item| %>
+              <tbody>
+              <% item = Item.find_by(id: sale_item.item)%>
+              <% item_measurement = Measurement.find_by(id: sale_item.measurement_id) %>
+              <% warehouse = Warehouse.find_by(id: sale_item.warehouse) %>
+              <tr>
+                <td class="align-middle"><%= item.try(:kode_barang) %></td>
+                <td class="align-middle"><%= item.try(:nama_barang) %></td>
+                <td class="align-middle"><%= item_measurement.try(:nama_satuan) %></td>
+                <td class="align-middle"><%= sale_item.jumlah_tersedia %></td>
+                <% if current_user.roles.any? { |r| r.id == 1 || r.id == 8 } %>
+                  <td class="align-middle"><%= sale_item.jumlah_keluar %></td>
+                  <td class="align-middle"><%= sale_item.lokasi_penempatan %></td>
+                <% end %>
+                <td class="align-middle"><%= warehouse.try(:nama_gudang) %></td>
+                <td class="align-middle text-center">
+                  <%= link_to edit_sale_item_path(sale_item), class:"btn btn-success btn-sm rounded-circle text-white py-1 mb-1 px-2" do  %>
+                    <i class="fas fa-pencil-alt"></i>
+                  <% end %>
+                  <%= link_to sale_item, method: :delete, data:{ confirm: 'Apakah anda yakin ingin menghapus?'},remote: true, class:"btn btn-danger btn-sm rounded-circle text-white py-1 mb-1 px-2" do %>
+                    <i class="fas fa-trash-alt"></i>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+            </tbody>
+          </table>
+        </div>
+        <br>
+        <div class="d-grid gap-2 d-md-flex mx-5 mb-3 justify-content-md-end">
+          <%= form_with(model: @sale, local: true) do |form| %>
+            <% if @sale.errors.any? %>
+              <div id="error_explanation">
+                <h2><%= pluralize(sale.errors.count, "error") %> prohibited this sale from being saved:</h2>
+                <ul>
+                  <% sale.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+            <%= form.hidden_field :status_id, :value => 8, id: "status_id" %>
+            <button class="btn btn-success btn-custom rounded-pill" type="submit">Submit</button>
+          <% end %>
+        </div>
+      </div>
+    </div>
+<!--    <div class="modal fade" id="tambahBarangPengeluaran" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">-->
+<!--      <div class="modal-dialog modal-dialog-centered modal-xl">-->
+<!--        <div class="modal-content">-->
+<!--          <div class="modal-header justify-content-md-center bg-gradient-primary">-->
+<!--            <h5 class="modal-title text-white" id="editItemMaterialModalLabel">Tambah Pengeluaran Barang Penjualan</h5>-->
+<!--          </div>-->
+<!--          <div class="modal-body">-->
+            <%#= form_for(@sale_item, url: sale_items_path, method: 'POST') do |form| %>
+              <%# if @sale_item.errors.any? %>
+<!--                <div id="error_explanation">-->
+<!--                  <h2><%#= pluralize(sale_item.errors.count, "error") %> prohibited this sale_item from being saved:</h2>-->
+<!--                  <ul>-->
+                    <%# sale_item.errors.full_messages.each do |message| %>
+<!--                      <li><%#= message %></li>-->
+                    <%# end %>
+<!--                  </ul>-->
+<!--                </div>-->
+              <%# end %>
+
+<!--              <div class="mb-3 row">-->
+<!--                <label for="" class="col-sm-4 col-form-label font-weight-bolder">Kode Barang</label>-->
+<!--                <div class="col-sm-8">-->
+                  <%#= form.collection_select :item_id, Item.all, :id, :kode_barang, {prompt: "pilih kode barang"}, class: "form-control", id:"kode-barang", onchange: "setNamaBarang()" %>
+<!--                </div>-->
+<!--              </div>-->
+
+<!--              <div class="mb-3 row">-->
+<!--                <label for="" class="col-sm-4 col-form-label font-weight-bolder">Nama Barang</label>-->
+<!--                <div class="col-sm-8">-->
+<!--                  <input type="text" class="form-control" id="nama-barang" readonly>-->
+<!--                </div>-->
+<!--              </div>-->
+
+<!--              <div class="mb-3 row">-->
+<!--                <label for="" class="col-sm-4 col-form-label font-weight-bolder">Satuan</label>-->
+<!--                <div class="col-sm-8">-->
+                  <%#= form.collection_select :measurement_id, Measurement.all, :id, :nama_satuan, { prompt: true }, class: "form-control" %>
+<!--                </div>-->
+<!--              </div>-->
+
+<!--              <div class="mb-3 row">-->
+                <%#= form.label :warehouse_id, "Nama Gudang", class: "col-sm-4 col-form-label font-weight-bolder" %>
+<!--                <div class="col-sm-8">-->
+                  <%#= form.collection_select :warehouse_id, Warehouse.all, :id, :nama_gudang, { prompt: true }, class: "form-control" %>
+<!--                </div>-->
+<!--              </div>-->
+
+              <%# if current_user.roles.any? { |r| r.id == 1 || r.id == 8 } %>
+
+<!--                <div class="mb-3 row">-->
+<!--                  <label for="" class="col-sm-4 col-form-label font-weight-bolder">Lokasi Penempatan</label>-->
+<!--                  <div class="col-sm-8">-->
+                    <%#= form.text_field :lokasi_penempatan, class: "form-control" %>
+<!--                  </div>-->
+<!--                </div>-->
+
+              <%# end %>
+<!--              <div class="mb-3 row">-->
+<!--                <label for="" class="col-sm-4 col-form-label font-weight-bolder">Jumlah Tersedia</label>-->
+<!--                <div class="col-sm-8">-->
+                  <%#= form.text_field :jumlah_tersedia, class: "form-control" %>
+<!--                </div>-->
+<!--              </div>-->
+
+<!--                <div class="mb-3 row">-->
+<!--                  <label for="" class="col-sm-4 col-form-label font-weight-bolder">Jumlah Keluar</label>-->
+<!--                  <div class="col-sm-8">-->
+                    <%#= form.number_field :jumlah_keluar, class: "form-control" %>
+<!--                  </div>-->
+<!--                </div>-->
+<!--               Start Hidden Field Section -->
+              <%#= form.hidden_field :sale_id, id: "sale_id", :value => @sale.id %>
+<!--               Finish Hideed Field Section -->
+
+
+<!--              <div class="modal-footer">-->
+<!--                <button class="btn btn-info text-white btn-custom rounded-pill" type="submit">Simpan</button>-->
+<!--              </div>-->
+<!--              </div>-->
+            <%# end %>
+<!--            </div>-->
+<!--      </div>-->
+<!--    </div>-->
+  </div>
+</div>

@@ -1,0 +1,62 @@
+<% unless notice.blank? %>
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  <strong id="notice"><%= notice %></strong>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<% end %>
+
+<h1 class="my-5 text-center font-weight-bolder text-primary">Satuan Ukur</h1>
+
+<div class="row px-3">
+  <div class="col-12 mt-3 d-flex justify-content-right">
+    <%= link_to new_measurement_path, class:"btn btn-primary btn-custom rounded-pill text" do %>
+      <i id="my-icon" class="fas fa-plus"></i>
+      <span>Tambah Satuan</span>
+    <% end %>
+  </div>
+</div>
+
+<br>
+
+<div class="row mx-0">
+  <div class="col-12">
+    <div class="table-responsive">
+      <table class="table table-bordered" id="dataTable">
+        <thead class="bg-primary">
+        <tr class="text-center">
+         <th style="width: 1%;">No</th>
+          <th class="align-middle" style="width: 25%;">Nama Satuan</th>
+          <th class="align-middle" style="width: 10%;">Aksi</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% @measurements.each_with_index do |measurement, index| %>
+           <tr>
+            <td class="align-middle text-center">
+                <%= index+1 %>
+                </td>
+            <td class="align-middle text-center"><%= measurement.nama_satuan %></td>
+            <td class="align-middle text-center">
+              <%= link_to measurement,  class:"btn btn-success btn-sm rounded-circle text-white py-1 mb-1 px-2" do %>
+                <i class="fas fa-eye"></i>
+              <% end %>
+              <%= link_to edit_measurement_path(measurement),  class:"btn btn-warning btn-sm rounded-circle text-white py-1 mb-1 px-2" do  %>
+                <i class="fas fa-pencil-alt"></i>
+              <% end %>
+              <%= link_to measurement, method: :delete, class:"btn btn-danger btn-sm rounded-circle text-white py-1 mb-1 px-2",
+                          data: { confirm: 'Are you sure?' } do %>
+                <i class="fas fa-trash"></i>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<br>
+
+

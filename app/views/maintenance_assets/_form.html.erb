@@ -1,0 +1,91 @@
+<%= form_with(model: maintenance_asset, local: true) do |form| %>
+  <% if maintenance_asset.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(maintenance_asset.errors.count, "error") %> prohibited this maintenance_asset from being saved:</h2>
+      <ul>
+      <% maintenance_asset.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="row mx-0 px-5">
+    <div class="container py-4 px-5">
+
+      <div class="mb-3 row">
+        <%= form.label :tanggal_pengeluaran, class: "col-sm-4 col-form-label font-weight-bolder" %>
+        <div class="col-sm-8">
+          <%= form.date_field :tanggal_pengeluaran, class:"form-control" %>
+        </div>
+      </div>
+
+      <div class="mb-3 row" id="">
+        <%= form.label :kode_proyek, "Kode Proyek", class: "col-sm-4 col-form-label font-weight-bolder" %>
+        <div class="col-sm-8">
+          <%= form.text_field :kode_proyek, class: "form-control", id:"autocomplete_maintenance", placeholder: "Cari Kode atau Nama Proyek" %>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <%= form.label :nama_proyek, "Nama Proyek", class: "col-sm-4 col-form-label font-weight-bolder" %>
+        <div class="col-sm-8">
+          <%= form.text_field :nama_proyek, class: "form-control ma_nama_proyek", readonly: true %>
+        </div>
+      </div>
+
+      <div class="mb-3 row" id="">
+        <%= form.label :jenis_pengeluaran, class: "col-sm-4 col-form-label font-weight-bolder" %>
+        <div class="col-sm-8">
+          <%= form.text_field :jenis_pengeluaran, class:"form-control", :value => 'Maintenance Asset', :readonly => true %>
+        </div>
+      </div>
+
+
+      <div class="mb-3 row">
+        <%= form.label :nama_inputer, class: "col-sm-4 col-form-label font-weight-bolder" %>
+        <div class="col-sm-8">
+          <%= form.text_field :nama_inputer, class:"form-control" %>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <%= form.label :kode_akun, "Kode Akun", class: "col-sm-4 col-form-label font-weight-bolder" %>
+        <div class="col-sm-8">
+          <%= form.text_field :kode_akun, class: "form-control ma_kode_akun", readonly: true %>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <%= form.label :nama_akun, "Nama Akun", class: "col-sm-4 col-form-label font-weight-bolder" %>
+        <div class="col-sm-8">
+          <%= form.text_field :nama_akun, class:"form-control ma_nama_akun", readonly: true %>
+        </div>
+      </div>
+
+      <div class="mb-3 row" id="">
+        <%= form.label :keterangan_pengeluaran, class: "col-sm-4 col-form-label font-weight-bolder" %>
+        <div class="col-sm-8">
+          <%= form.text_area :keterangan_pengeluaran, class:"form-control" %>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <%= form.label :dokumen_pengeluaran, "Dokumen Pendukung", class: "col-sm-4 col-form-label font-weight-bolder" %>
+        <div class="col-sm-8">
+          <%= form.file_field :dokumen_pengeluaran, class: "form-control", multiple: true %>
+        </div>
+      </div>
+
+      <!--Start Hidden Fields Section-->
+      <%= form.hidden_field :user_id, id:'user_id', :value => current_user.id %>
+      <%= form.hidden_field :status_id, id:'status_id', :value => 1 %>
+      <%= form.hidden_field :nomor_pengeluaran, id:'nomor_pengeluaran_id', :value => @nomor_pengeluaran %>
+      <%= form.hidden_field :kode_proyek, id: "kode_proyek_id"%>
+      <!--Finish Hidden Fields Section-->
+
+      <div class="col-sm-12">
+        <div class="mb-3 float-right">
+          <button class="btn btn-primary text-white btn-custom rounded-pill" data-dismiss="modal">Simpan</button>
+        </div>
+<% end %>

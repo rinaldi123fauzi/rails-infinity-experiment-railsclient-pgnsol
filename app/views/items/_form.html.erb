@@ -1,0 +1,87 @@
+<%= form_with(model: item, local: true) do |form| %>
+  <% if item.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(item.errors.count, "error") %> prohibited this item from being saved:</h2>
+
+      <ul>
+      <% item.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+<!--  <h5>-->
+    <%#= form_with url: import_items_path, local: true do |i| %>
+      <%#= i.file_field :file %>
+      <%#= i.submit %>
+<!--      <i class="fas fa-file-import"></i>-->
+<!--      <span>Import Dari Excel</span>-->
+    <%# end %>
+<!--  </h5>-->
+
+  <div class="row mx-0 px-5">
+    <div class="container py-4 px-5">
+
+      <div class="mb-3 row">
+        <%= form.label :nama_barang, "Nama Barang", class: "col-sm-4 col-form-label"  %>
+        <div class="col-sm-8">
+          <%= form.text_field :nama_barang, class: "form-control",
+                              :required => true,
+                              :oninvalid => "this.setCustomValidity('Kelompok Barang Belum Di Pilih')",
+                              :oninput =>"setCustomValidity('')" %>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <%= form.label :kelompok_barang, "Kelompok Barang", class: "col-sm-4 col-form-label" %>
+        <div class="col-sm-8">
+          <%= form.collection_select :item_group_id, ItemGroup.all, :id, :kelompok_barang, { prompt: "Pilih Kelompok Barang" }, class: "form-control" %>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <%= form.label :kelompok_barang, "Spesifikasi Barang : ", class: "col-sm-4 col-form-label" %>
+      </div>
+
+      <div class="mb-3 row">
+        <%= form.label :ukuran, class: "col-sm-4 col-form-label"  %>
+        <div class="col-sm-8">
+          <%= form.text_field :ukuran, class: "form-control" %>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <%= form.label :tipe, "Tipe", class: "col-sm-4 col-form-label"  %>
+        <div class="col-sm-8">
+          <%= form.text_field :tipe, class: "form-control" %>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <%= form.label :merk, class: "col-sm-4 col-form-label"  %>
+        <div class="col-sm-8">
+          <%= form.text_field :merek, class: "form-control" %>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <%= form.label :serial_number, class: "col-sm-4 col-form-label"  %>
+        <div class="col-sm-8">
+          <%= form.text_field :serial, class: "form-control" %>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <%= form.label :lain, "Lain - lain", class: "col-sm-4 col-form-label"  %>
+        <div class="col-sm-8">
+          <%= form.text_field :lain, class: "form-control" %>
+        </div>
+      </div>
+
+  <div class="row">
+      <div class="col-sm-12">
+        <div class="mt-4 float-right">
+           <button class="btn btn-primary text-white btn-custom rounded-pill" data-dismiss="modal">Simpan</button>
+          </div>
+<% end %>

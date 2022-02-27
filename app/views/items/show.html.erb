@@ -1,0 +1,92 @@
+<% unless notice.blank? %>
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  <strong id="notice"><%= notice %></strong>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<% end %>
+
+<h1 class="my-5 text-center font-weight-bolder text-primary">Detail Data Barang</h1>
+
+
+<div class="row mx-0 px-5">
+  <div class="container py-4 px-5">
+    <form action="">
+
+<!--      <div class="mb-3 row">-->
+<!--        <label for="" class="col-sm-4 col-form-label font-weight-bolder">Kode Barang</label>-->
+<!--        <div class="col-sm-8">-->
+<!--          <input type="text" class="form-control" value="<%#= @item.kode_qr %>" readonly>-->
+<!--        </div>-->
+<!--      </div>-->
+
+      <div class="mb-3 row">
+        <label for="" class="col-sm-4 col-form-label">Nama Barang </label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" value="<%= @item.nama_barang %>" disabled>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label for="" class="col-sm-4 col-form-label">Kelompok Barang </label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" value="<%= @item.item_group.try(:kelompok_barang) %>" disabled>
+        </div>
+      </div>
+
+<!--      <div class="mb-3 row">-->
+<!--        <label for="" class="col-sm-4 col-form-label font-weight-bolder">Satuan Barang </label>-->
+<!--        <div class="col-sm-8">-->
+          <%# measurement = Measurement.find_by(id: @item.measurement_id) %>
+<!--          <input type="text" class="form-control" value="<%#= measurement.nama_satuan %>" readonly>-->
+<!--        </div>-->
+<!--      </div>-->
+
+      <div class="mb-3 row">
+        <label for="" class="col-sm-4 col-form-label">Spesifikasi Barang </label>
+        <div class="col-sm-8">
+            <table border="0">
+              <tbody>
+              <tr>
+                <td width="120">Ukuran</td>
+                <td width="10">:</td>
+                <td><%= @item.ukuran%></td>
+              </tr>
+              <tr>
+                <td>Tipe</td>
+                <td>:</td>
+                <td><%= @item.tipe%></td>
+              </tr>
+              <tr>
+                <td>Merek</td>
+                <td>:</td>
+                <td><%= @item.merek%></td>
+              </tr>
+              <tr>
+                <td>Serial Number</td>
+                <td>:</td>
+                <td><%= @item.serial%></td>
+              </tr>
+              <tr>
+                <td>Lain - lain</td>
+                <td>:</td>
+                <td><%= @item.lain%></td>
+              </tr>
+              <tbody>
+            </table>
+        </div>
+      </div>
+
+
+      <div class="mb-3 row">
+        <div class="col-12">
+          <%= link_to 'Kembali', items_path, class:"btn btn-secondary text-white btn-custom rounded-pill pull-left" %>
+          <%= link_to 'Edit', edit_item_path(@item), class:"btn btn-warning text-white btn-custom rounded-pill pull-right" %>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+

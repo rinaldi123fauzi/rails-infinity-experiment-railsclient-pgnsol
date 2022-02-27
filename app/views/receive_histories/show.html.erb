@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Receive:</strong>
+  <%= @receive_history.receive %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @receive_history.status %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @receive_history.user %>
+</p>
+
+<p>
+  <strong>Role:</strong>
+  <%= @receive_history.role %>
+</p>
+
+<p>
+  <strong>Catatan penerimaan:</strong>
+  <%= @receive_history.catatan_penerimaan %>
+</p>
+
+<%= link_to 'Edit', edit_penerimaan_approval_path(@receive_history) %> |
+<%= link_to 'Back', penerimaan_approvals_path %>

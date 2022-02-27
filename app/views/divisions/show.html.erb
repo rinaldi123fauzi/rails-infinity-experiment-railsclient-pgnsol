@@ -1,0 +1,35 @@
+<% unless notice.blank? %>
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  <strong id="notice"><%= notice %></strong>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<% end %>
+
+<h1 class="my-5 text-center font-weight-bolder text-primary">Data Divisi</h1>
+
+<div class="row mx-0 px-5">
+  <div class="container pb-5 px-5">
+    <div class="mb-3 row">
+      <label for="" class="col-sm-4 col-form-label">Nama Divisi</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" value="<%= @division.nama_divisi %>" readonly>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12 col-sm-offset-2 mb-3">
+        <%= link_to 'Kembali', divisions_path, class: 'btn btn-secondary pull-left btn-custom rounded-pill' %>
+        <%= link_to 'Edit', edit_division_path(@division), class:"btn btn-warning text-white btn-custom rounded-pill pull-right" %>
+        </div>
+    </div>
+  </div>
+</div>
+<%# <p>
+  <strong>Nama divisi:</strong> %>
+  <%#= @division.nama_divisi %>
+<%# </p> %>
+
+<%#= link_to 'Edit', edit_division_path(@division) %> |
+<%#= link_to 'Back', divisions_path %>

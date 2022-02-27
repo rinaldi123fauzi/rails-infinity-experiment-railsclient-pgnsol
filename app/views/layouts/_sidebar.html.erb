@@ -1,0 +1,186 @@
+<!-- Sidebar -->
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+  <!-- Sidebar - Brand -->
+  <a class="sidebar-brand d-flex align-items-center justify-content-center" href="">
+    <div class="sidebar-brand-icon">
+      <img src="<%= image_url 'infinity-logo.png' %>" alt="" width="70%">
+    </div>
+    <div class="sidebar-brand-text mx-3">INFINITY</div>
+  </a>
+
+  <!-- Nav Item - Dashboard -->
+  <li class="nav-item">
+    <%= link_to root_path, class:"nav-link" do %>
+      <i id="my-icon" class="fas fa-fw fa-tachometer-alt"></i>
+      <span>Dashboard</span>
+    <% end %>
+  </li>
+
+  <% if current_user.roles.any? { |r| r.name == 'Admin Persediaan' || r.name == 'Staff Gudang' || r.name == 'Kepala Gudang' || r.name == 'Kadep Persediaan' || r.name == 'superadmin' || r.name == 'User OM' } %>
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#adminOfInventoryDepartmentReceiveSection"
+        aria-expanded="true" aria-controls="adminOfInventoryDepartmentReceiveSection">
+        <i class="fas fa-cart-arrow-down"></i>
+        <span>Penerimaan</span>
+      </a>
+
+      <div id="adminOfInventoryDepartmentReceiveSection" class="collapse" aria-labelledby="headingTwo"
+            data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+
+          <%= link_to receives_path, class:"collapse-item" do %>
+            <span>Pengadaan</span>
+          <% end %>
+
+          <%= link_to returs_path, class:"collapse-item" do %>
+            <span>Retur</span>
+          <% end %>
+
+          <div class="collapse-divider"></div>
+        </div>
+      </div>
+    </li>
+  <% end %>
+
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#ExpenditureSection"
+         aria-expanded="true" aria-controls="ExpenditureSection">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Pengeluaran</span>
+      </a>
+
+      <div id="ExpenditureSection" class="collapse" aria-labelledby="headingTwo"
+           data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+
+          <% if current_user.roles.any? { |r| r.name == 'User Trading' || r.name == 'Admin Persediaan' || r.name == 'Staff Gudang' || r.name == 'Kepala Gudang' || r.name == 'Kadep Persediaan' } %>
+            <%= link_to sales_path, class:"collapse-item" do %>
+              <span>Penjualan</span>
+            <% end %>
+          <% end %>
+
+          <% if current_user.roles.any? { |r| r.name == 'User EPC' || r.name == 'User OM' || r.name == 'Admin Persediaan' || r.name == 'Kepala Gudang'  || r.name == 'Kadep Persediaan'   || r.name == 'Staff Gudang' } %>
+            <%= link_to projects_path, class:"collapse-item" do %>
+              <span>Keproyekan</span>
+            <% end %>
+          <% end %>
+
+          <% if current_user.roles.any? { |r| r.name == 'Admin Persediaan' || r.name == 'Kepala Gudang'  || r.name == 'Kadep Persediaan' || r.name == 'Staff Gudang' || r.name == 'User OM' } %>
+        <%= link_to maintenance_assets_path, class:"collapse-item" do %>
+            <span>Pemeliharaan Aset</span>
+            <% end %>
+          <% end %>
+
+          <%#= link_to users_path, class:"collapse-item" do %>
+<!--            <span>Usulan Penghapusan</span>-->
+          <%# end %>
+
+          <%#= link_to users_path, class:"collapse-item" do %>
+<!--            <span>Penghapusan Buku</span>-->
+          <%# end %>
+
+          <div class="collapse-divider"></div>
+        </div>
+      </div>
+    </li>
+
+    <% if current_user.roles.any? { |r| r.name == 'superadmin' || r.name == 'Admin Persediaan' } %>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseMasterData"
+         aria-expanded="true" aria-controls="collapseMasterData">
+        <i class="fas fa-database"></i>
+        <span>Master Data</span>
+        </a>
+      <div id="collapseMasterData" class="collapse" aria-labelledby="headingTwo"
+           data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+
+          <%= link_to roles_path, class:"collapse-item" do %>
+            <span>Role</span>
+          <% end %>
+
+          <%= link_to users_path, class:"collapse-item" do %>
+            <span>Manajemen User</span>
+          <% end %>
+
+          <%= link_to divisions_path, class:'collapse-item' do %>
+          <span>Divisi</span>
+          <% end %>
+
+          <%= link_to warehouses_path, class:"collapse-item" do %>
+            <span>Gudang</span>
+          <% end %>
+
+          <%= link_to items_path, class:"collapse-item" do %>
+            <span>Barang</span>
+          <% end %>
+
+          <%= link_to item_groups_path, class:"collapse-item" do %>
+            <span>Kelompok Barang</span>
+          <% end %>
+
+          <%= link_to measurements_path, class:"collapse-item" do %>
+            <span>Satuan Barang</span>
+          <% end %>
+
+          <div class="collapse-divider"></div>
+
+        </div>
+      </div>
+    </li>
+    <% end %>
+
+
+  <%# elsif current_user.roles.any? { |r| r.name == "superadmin" || r.name == 'Kadep Gudang'} %>
+
+<!--  <li class="nav-item">-->
+    <%#= link_to root_path, class:"nav-link" do %>
+<!--      <i id="my-icon" class="fas fa-check-circle"></i>-->
+<!--      <span>Approval</span>-->
+    <%# end %>
+<!--  </li>-->
+
+    <% if current_user.roles.any? { |r| r.name == 'superadmin' || r.name == 'Staff Gudang' || r.name == 'Admin Persediaan' } %>
+      <li class="nav-item">
+        <%= link_to stock_opnames_path, class:"nav-link" do %>
+          <i class="fas fa-fw fa-tachometer-alt"></i>
+          <span>Stock Opname</span>
+        <% end %>
+      </li>
+    <% end %>
+
+  <!-- <li class="nav-item">-->
+  <!--                <a class="nav-link" href="stock-opname.html">-->
+  <!--                    <i class="fas fa-fw fa-tachometer-alt"></i>-->
+  <!--                    <span>Stock Opname</span></a>-->
+  <!--            </li> -->
+
+
+  <!-- Nav Item - Pages Collapse Menu -->
+
+  <!-- <li class="nav-item">-->
+  <!--                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"-->
+  <!--                    aria-expanded="true" aria-controls="collapseTwo">-->
+  <!--                    <i class="fas fa-fw fa-cog"></i>-->
+  <!--                    <span>Laporan</span>-->
+  <!--                </a>-->
+  <!--                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">-->
+  <!--                    <div class="bg-white py-2 collapse-inner rounded">-->
+  <!--                                               <h6 class="collapse-header">Custom Components:</h6>-->
+  <!--                        <a class="collapse-item" href="">Penerimaan</a>-->
+  <!--                        <a class="collapse-item" href="cards.html">Pengeluaran</a>-->
+  <!--                        <a class="collapse-item" href="#">Stock Opnam</a>-->
+  <!--                        <a class="collapse-item" href="cards.html">Laporan Persediaan</a>-->
+  <!--                    </div>-->
+  <!--                </div>-->
+  <!--            </li>-->
+
+  <!-- Sidebar Toggler (Sidebar) -->
+  <div class="text-center d-none d-md-inline">
+    <button class="rounded-circle border-0" id="sidebarToggle"></button>
+  </div>
+</ul>
+<!-- End of Sidebar -->

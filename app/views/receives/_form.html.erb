@@ -1,0 +1,416 @@
+<%= form_with(model: receive, local: true) do |form| %>
+  <% if receive.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(receive.errors.count, "error") %> prohibited this receive from being saved:</h2>
+
+      <ul>
+      <% receive.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+
+  <%#= select_tag "select_benef", options_for_select(getAkunPersediaan()), :class => "selectSearch selectAkun" %>
+
+
+
+  <!--  <div class="field">-->
+    <%#= form.label :jenis %>
+    <%#= form.text_field :jenis, id:"assign-code" %>
+<!--  </div>-->
+
+  <%#= form.text_field :jenis, id:"projectCode" %>
+
+<!--  <ul class="nav nav-tabs" id="myTab" role="tablist">-->
+<!--    <li class="nav-item" role="presentation">-->
+<!--      <a class="nav-link active" id="receive-tab" data-toggle="tab" href="#receive-home" role="tab" aria-controls="receive-home" aria-selected="true">Data</a>-->
+<!--    </li>-->
+<!--    <li class="nav-item" role="presentation">-->
+<!--      <a class="nav-link" id="receive-item-tab" data-toggle="tab" href="#receive-item" role="tab" aria-controls="receive-item" aria-selected="false">Barang</a>-->
+<!--    </li>-->
+<!--  </ul>-->
+<!--  <div class="tab-content" id="myTabContent">-->
+<!--    <div class="tab-pane fade show active" id="receive-home" role="tabpanel" aria-labelledby="receive-home-tab">-->
+      <div class="row mx-0 px-5">
+        <div class="container py-4 px-5">
+
+           <div class="mb-3 row">
+            <%= form.label :nomor_po, "Nomor PO", class: "col-sm-4 col-form-label" %>
+            <div class="col-sm-8">
+              <%= form.text_field :nomor_po, class: "form-control" %>
+            </div>
+          </div>
+
+            <div class="mb-3 row">
+            <%= form.label :tanggal_po, "Tanggal PO", class: "col-sm-4 col-form-label" %>
+            <div class="col-sm-8">
+              <%= form.date_field :tanggal_po, class: "form-control" %>
+            </div>
+          </div>
+
+          <div class="mb-3 row">
+            <%= form.label :nomor_bast, "Nomor BAST/DO", class: "col-sm-4 col-form-label" %>
+            <div class="col-sm-8">
+              <%= form.text_field :nomor_bast, class: "form-control", required: true %>
+            </div>
+          </div>
+
+            <div class="mb-3 row">
+            <%= form.label :tanggal_bast, "Tanggal BAST/DO", class: "col-sm-4 col-form-label" %>
+            <div class="col-sm-8">
+              <%= form.date_field :tanggal_bast, selected: Date.today, min: 0.days.ago, class: "form-control", required: true %>
+            </div>
+          </div>
+
+            <div class="mb-3 row">
+            <%= form.label :judul_bast, "Judul BAST/DO", class: "col-sm-4 col-form-label" %>
+            <div class="col-sm-8">
+              <%= form.text_field :judul_bast, class: "form-control", required: true %>
+            </div>
+          </div>
+
+
+          <div class="mb-3 row">
+            <%= form.label :jenis, "Jenis Penerimaan", class: "col-sm-4 col-form-label" %>
+            <div class="col-sm-8">
+              <%#= form.text_field :jenis, class: "form-control" %>
+              <%= form.text_field :jenis, class: "form-control", :value => 'Pengadaan', :readonly => true, required: true%>
+            </div>
+          </div>
+
+
+          <div class="mb-3 row">
+            <%= form.label :jumlah_harga_bast, "Jumlah Harga BAST/DO (ex ppn)", class: "col-sm-4 col-form-label" %>
+            <div class="col-sm-8">
+              <% if params[:id].present? %>
+                <% getHargaBAST = Receive.find(params[:id])%>
+                <input type="text" class="form-control" value="<%= number_to_currency(getHargaBAST.jumlah_harga_bast, unit: "Rp. ", separator: ",", delimiter: ".")%>" id="negoprice_result"/>
+              <% else %>
+                <input type="text" class="form-control" id="negoprice_result"/>
+              <% end %>
+              <%= form.hidden_field :jumlah_harga_bast, class: "form-control", id: "clarification_negotiation_report_negoprice_result", required: true %>
+            </div>
+          </div>
+
+
+          <div class="mb-3 row">
+            <%= form.label :nama_penyedia, "Nama Penyedia Barang", class: "col-sm-4 col-form-label" %>
+            <div class="col-sm-8">
+              <%= form.text_field :nama_penyedia, class: "form-control" , id:"autocomplete_vendor" %>
+            </div>
+          </div>
+
+          <div class="mb-3 row">
+            <%= form.label :pilih_kode, "Pilih Kode", class: "col-sm-4 col-form-label" %>
+            <div class="col-sm-8">
+              <% if @receive.new_record? %>
+                <input type="radio" value="project" name="receive[kategori_kode]" id="pilih-kode">
+                <label>Kode Proyek</label>
+                <input type="radio" value="program" name="receive[kategori_kode]" id="pilih-kode">
+                <label>Kode Program</label>
+              <% else %>
+                <% if @receive.kategori_kode.match(/^project$/) %>
+                  <input type="radio" value="project" name="receive[kategori_kode]" id="pilih-kode" checked>
+                  <label>Kode Proyek</label>
+                  <input type="radio" value="program" name="receive[kategori_kode]" id="pilih-kode">
+                  <label>Kode Program</label>
+                <% elsif @receive.kategori_kode.match(/^program$/) %>
+                  <input type="radio" value="project" name="receive[kategori_kode]" id="pilih-kode">
+                  <label>Kode Proyek</label>
+                  <input type="radio" value="program" name="receive[kategori_kode]" id="pilih-kode" checked>
+                  <label>Kode Program</label>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="kode_proyek mb-3 row">
+              <%= form.label :kode_proyek, "Kode Proyek", class: "col-sm-4 col-form-label" %>
+              <div class="col-sm-8">
+                <% if @receive.new_record?%>
+                  <%= select_tag "select_project", options_for_select(getProject()), :class => "js-example-basic-single form-control selectProject", :id => "kode-proyek" %>
+                <% else %>
+                  <% if @receive.kode_proyek.present? %>
+                    <select data-placeholder="Pilih Kode Proyek" class="form-control selectProject" name="receive[kode_proyek]" id="kode-proyek" data-live-search="true" onclick="select_project()">
+                        <%= raw(getProjectParams(@receive.kode_proyek))%>
+                    </select>
+                  <% else %>
+                    <%= select_tag "select_project", options_for_select(getProject()), :class => "js-example-basic-single form-control selectProject", :id => "kode-proyek" %>
+                  <% end %>
+                <% end %>
+              </div>
+              <%= form.hidden_field :kode_proyek, :id => "kode_proyek_id" %>
+          </div>
+
+          <div class="kode_program mb-3 row">
+            <%= form.label :kode_program, "Kode Program", class: "col-sm-4 col-form-label" %>
+              <div class="col-sm-8">
+                <% if @receive.new_record?%>
+                  <%= select_tag "select_benef", options_for_select(getProgram()), :class => "js-example-basic-single form-control selectProgram", :id => "kode-program" %>
+                <% else %>
+                  <% if @receive.kode_proyek.present? %>
+                    <select data-placeholder="Pilih Kode Program" class="form-control selectProgram" name="receive[kode_proyek]" id="kode-program" data-live-search="true" onclick="select_benef()">
+                        <%= raw(getProgramParams(@receive.kode_proyek))%>
+                    </select>
+                  <% else %>
+                    <%= select_tag "select_benef", options_for_select(getProgram()), :class => "js-example-basic-single form-control selectProgram", :id => "kode-program" %>
+                  <% end %>
+                <% end %>
+              </div>
+            <%= form.hidden_field :kode_proyek, :id => "kode_program_id" %>
+          </div>
+
+          <div class="mb-3 row nama_proyek">
+            <%= form.label :nama_proyek, "Nama Proyek", class: "col-sm-4 col-form-label" %>
+            <div class="col-sm-8">
+              <%= form.text_field :nama_proyek, class: "form-control nama-proyek", :readonly => true %>
+            </div>
+          </div>
+
+          <div class="mb-3 row nama_program">
+            <%= form.label :nama_program, "Nama Program", class: "col-sm-4 col-form-label" %>
+            <div class="col-sm-8">
+              <%= form.text_field :nama_proyek, class: "form-control nama-program", :readonly => true %>
+            </div>
+          </div>
+
+          <div class="mb-3 row">
+            <%= form.label :kode_akun, "Kode Akun", class: "col-sm-4 col-form-label" %>
+            <div class="col-sm-8">
+              <% if @receive.new_record?%>
+                <%= select_tag "select_supply_account", options_for_select(getAkunPersediaan()), :class => "js-example-basic-single form-control selectSupplyAccount", required: true %>
+              <% else %>
+                <select data-placeholder="Pilih Kode Akun" class="form-control selectSupplyAccount" name="receive[kode_akun]" data-live-search="true" onclick="select_supply_account()">
+                    <%= raw(getAkunPersediaanParams(@receive.kode_akun))%>
+                </select>
+              <% end %>
+            </div>
+
+          </div>
+
+          <div class="mb-3 row">
+            <%= form.label :pemilik_material, "Pemilik Barang", class: "col-sm-4 col-form-label" %>
+            <div class="col-sm-8">
+              <%= form.collection_select :division_id, Division.all, :id, :nama_divisi, {prompt: "Pilih Pemilik Barang"}, :class => "form-control", required: true %>
+              <%#= form.hidden_field :division_id, :value => getDivision, id: "division_id" %>
+
+            </div>
+          </div>
+
+          <div class="mb-3 row">
+            <%#= form.label :pemilik_material, "Pemilik", class: "col-sm-4 col-form-label"%>
+            <label for="" class="col-sm-4 col-form-label">Upload File BAST/DO</label>
+            <div class="col-sm-8">
+              <%= form.file_field :dokumen, class: "form-control", onchange: "fileValidationpdf();", id: "nama_file", multiple: true, required: true, :oninvalid => "this.setCustomValidity('Dokumen BAST/DO Belum Di Upload')"%>
+            </div>
+          </div>
+
+          <div class="mb-3 row">
+            <%= form.label :inputer, "Inputer", class: "col-sm-4 col-form-label" %>
+            <div class="col-sm-8">
+              <%= form.text_field :inputer, class: "form-control"%>
+            </div>
+          </div>
+
+              <div class="col-sm-12">
+                    <div id="pdf_view"></div>
+              </div>
+
+          <div class="mb-3 row">
+            <%= form.label :gudang_penempatan, "Gudang Penempatan", class: "col-sm-4 col-form-label" %>
+            <div class="col-sm-8">
+              <%= collection_select :receive, :warehouse_id, Warehouse.all, :id, :nama_gudang, {prompt: "Pilih Nama Gudang"}, class: "form-control", required: true %>
+            </div>
+          </div>
+
+          <div class="mb-3 row">
+            <%= form.label :catatan, "Catatan", class: "col-sm-4 col-form-label" %>
+            <div class="col-sm-8">
+              <%= form.text_area :catatan, class: "form-control"%>
+            </div>
+          </div>
+
+          <%= form.text_field :project_program, :value => 'project', :readonly => true, :hidden => true %>
+
+          <%= form.hidden_field :status_id, :value => 1, id: "status_id" %>
+
+          <%= form.hidden_field :user_id, :value => current_user.id, id: "user_id" %>
+
+          <%= form.hidden_field :kode_akun, id: "code"%>
+
+          <div class="mb-6">
+          <div class="row">
+              
+            <div class="col-sm-12">
+               <button class="btn btn-primary text-white btn-custom rounded-pill pull-right" data-dismiss="modal">Simpan</button>
+            <% end %>
+
+<script type="text/javascript">
+  $('.selectProject').select2();
+  $('.selectProgram').select2();
+  $('.selectSupplyAccount').select2();
+
+autocomplete_vendor();
+function autocomplete_vendor(){
+  $("#autocomplete_vendor").autocomplete({
+    source: '/autocomplete/search_vendor',
+    minLength: 2,
+    select: function (event, ui){
+      console.log(event);
+      var l = ui.item.label;
+      $(this).val(l);
+      return false;
+    }
+  })
+}
+
+function resetprojectCodeData() {
+    $('#kode_proyek_id').val('');
+    $('#kode_program_id').val('');
+}
+
+select_benef();
+function select_benef() {
+    $('.selectProgram').change(function(){
+        resetprojectCodeData();
+        if ($(this).val() !== '') {
+            const e = JSON.parse($(this).val());
+            $('.nama-program').val(e.uraian);
+            $('#kode_program_id').val(e.code);
+            console.log(e)
+        }
+    });
+}
+
+select_project();
+function select_project() {
+    $('.selectProject').change(function(){
+        resetprojectCodeData();
+        if ($(this).val() !== '') {
+            const e = JSON.parse($(this).val());
+            $('.nama-proyek').val(e[0].projectName);
+            $('#kode_proyek_id').val(e[0].projectCode);
+            console.log(e)
+        }
+    });
+}
+
+select_supply_account();
+function select_supply_account() {
+    $('.selectSupplyAccount').change(function(){
+        if ($(this).val() !== '') {
+            const e = JSON.parse($(this).val());
+            $('#code').val(e.kode);
+            console.log(e)
+        }
+    });
+}
+
+function fileValidationpdf() {
+  var fileInput = document.getElementById('nama_file');
+  var filePath = fileInput.value;
+  var allowedExtensions = /(\.pdf)$/i;
+  if (!allowedExtensions.exec(filePath)) {
+      alert('Please upload file having extensions .pdf only.');
+      fileInput.value = '';
+      return false;
+  } else {
+      //Image preview
+      if (fileInput.files && fileInput.files[0]) {
+          var reader = new FileReader();
+          reader.onload = function (e) {
+              document.getElementById('pdf_view').innerHTML = '<iframe src="' + e.target.result + '" style="width: 100%; height: 400px;"/>';
+          };
+          render.readAsDataURL(fileInput.files[0]);
+      }
+  }
+}
+
+function convertObjectToSelectOptions(obj){
+    var htmlTags = '';
+    for (var tag in obj){
+        htmlTags += '<option value="'+tag+'" selected="selected">'+obj[tag]+'</option>';
+    }
+    return htmlTags;
+}
+
+jQuery(function () {
+  $("input[name='receive[kategori_kode]']").click(function() {
+      var value = $(this).val();
+      if (value == "program"){
+        resetprojectCodeData();
+        $('div.kode_program').show();
+        $('div.kode_proyek').hide();
+        $('div.nama_program').show();
+        $('div.nama_proyek').hide();
+        $('.nama-proyek').attr('disabled', true);
+        $('.nama-program').attr('disabled', false);
+        $('#kode_proyek_id').attr('disabled', true);
+        $('#kode_program_id').attr('disabled', false);
+        document.getElementById('kode-program').required = true;
+        document.getElementById('kode-proyek').required = false;
+      }
+      else if(value == "project"){
+        resetprojectCodeData();
+        $('div.kode_program').hide();
+        $('div.kode_proyek').show();
+        $('div.nama_program').hide();
+        $('div.nama_proyek').show();
+        $('.nama-proyek').attr('disabled', false);
+        $('.nama-program').attr('disabled', true);
+        $('#kode_proyek_id').attr('disabled', false);
+        $('#kode_program_id').attr('disabled', true);
+        document.getElementById('kode-program').required = false;
+        document.getElementById('kode-proyek').required = true;
+      }
+  });
+  resetprojectCodeData();
+  $('.kode_program').hide();
+  $('.kode_proyek').hide();
+  $('.nama_program').hide();
+  $('.nama_proyek').hide();
+  document.getElementById('kode-program').required = false;
+  document.getElementById('kode-proyek').required = false;
+  document.getElementById("pilih-kode").required = true;
+
+  var checked = $('#pilih-kode:checked').val();
+  if (checked == "project"){
+    $('div.kode_program').hide();
+    $('div.kode_proyek').show();
+    $('div.nama_program').hide();
+    $('div.nama_proyek').show();
+    $('#kode_proyek_id').attr('disabled', false);
+    $('#kode_program_id').attr('disabled', true);
+    document.getElementById('kode-program').required = false;
+    document.getElementById('kode-proyek').required = true;
+  }else if (checked == "program"){
+    $('div.kode_program').show();
+    $('div.kode_proyek').hide();
+    $('div.nama_program').show();
+    $('div.nama_proyek').hide();
+    $('#kode_proyek_id').attr('disabled', true);
+    $('#kode_program_id').attr('disabled', false);
+    document.getElementById('kode-program').required = true;
+    document.getElementById('kode-proyek').required = false;
+  }
+});
+
+
+$('#negoprice_result').keyup(function(){
+    var value = (this.value.replace(/[^\/\d]/g, ''));
+    var bidprice = parseInt($('#clarification_negotiation_report_bidprice').val());
+    var negoprice = parseInt(value);
+    $('#clarification_negotiation_report_negoprice_result').val(negoprice);
+    this.value = rupiah_formater(value, 'Rp. ');
+    var selisih = bidprice - negoprice;
+    $('#clarification_negotiation_report_negoprice_bidpricecorrected_gap').val(selisih);
+    selisih = selisih + "";
+    selisih = (selisih.replace(/[^\/\d]/g, ''));
+    selisih = rupiah_formater(selisih, 'Rp. ');
+    $('#negoprice_bidpricecorrected_gap').val(selisih);
+});
+$('#negoprice_result').val(rupiah_formater($('#negoprice_result').val(), 'Rp. '));
+    
+</script>

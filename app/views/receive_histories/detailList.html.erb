@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Penerimaan Approvals</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Kode Transaksi</th>
+      <th>Status</th>
+      <th>Dikirim</th>
+      <th>Catatan penerimaan</th>
+      <th>Status Approval</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @receive_histories.each do |receive_history| %>
+      <tr>
+        <td><%= receive_history.receive.try(:kode_transaksi_penerimaan) %></td>
+        <td><%= receive_history.status.try(:nama_status) %></td>
+        <td><%= receive_history.user.try(:name) %></td>
+        <td><%= receive_history.catatan_penerimaan %></td>
+        <td><%= receive_history.try(:status_approval) %></td>
+        <td><%= link_to 'Detail', detailApproval_path(receive_history.receive_id) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+

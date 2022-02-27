@@ -1,0 +1,256 @@
+<div class="tab-pane fade" id="receive-item" role="tabpanel" aria-labelledby="receive-item-tab">
+
+    <%= form_for(@receive_item, url: receive_items_path, method: 'POST') do |form| %>
+      <% if @receive_item.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(receive_item.errors.count, "error") %> prohibited this receive_item from being saved:</h2>
+
+          <ul>
+            <% receive_item.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+
+        </div>
+      <% end %>
+      <% unless current_user.roles.any? { |r| r.name == 'Kadep Persediaan' || r.name == 'Kepala Gudang' || r.name == 'Staff Gudang'} %>
+        <button type="button" class="btn btn-primary btn-custom rounded-pill text" style="margin-left: 20px;" data-toggle="modal" data-target="#tambahBarang">
+          <i id="my-icon" class="fas fa-plus"></i>
+          Tambah Barang
+        </button>
+      <% end %>
+      <br>
+      <br>
+
+      <div class="modal fade" id="tambahBarang" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+          <div class="modal-content">
+            <div class="modal-header justify-content-md-center bg-gradient-primary text-center">
+              <h5 class="modal-title w-100 text-white" id="editItemMaterialModalLabel">Input Item Barang</h5>
+              <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" id="modal_body">
+
+              <style>
+                .select2 {
+                  width: 100% !important;
+                }
+              </style>
+
+              <div class="mb-3 row">
+                <%= form.label :nama_barang, "Nama Barang", class: "col-sm-4 col-form-label" %>
+                <div class="col-sm-8">
+                  <%= form.collection_select :item_id, Item.all, :id, :searchItem, {prompt: "pilih nama barang"}, class: "form-control namaBarang", id:"staff", required: true %>
+                </div>
+              </div>
+
+              <div class="mb-3 row">
+                <%= form.label :measurement_id, "Satuan", class: "col-sm-4 col-form-label" %>
+                <div class="col-sm-8">
+                  <%= form.collection_select :measurement_id, Measurement.all, :id, :nama_satuan, {prompt: "pilih satuan"}, class: "form-control", required: true %>
+                </div>
+              </div>
+
+              <div class="mb-3 row">
+                <%= form.label :harga_satuan, "Harga Satuan", class: "col-sm-4 col-form-label" %>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="negoprice_result", required/>
+                  <%= form.hidden_field :harga_satuan, class: "form-control", id:"harga_satuan", required: true %>
+                </div>
+              </div>
+
+              <div class="mb-3 row">
+                <%= form.label :jumlah_pesanan, "Jumlah Pesanan", class: "col-sm-4 col-form-label" %>
+                <div class="col-sm-8">
+                  <%= form.number_field :jumlah_pesanan, class: "form-control", required: true %>
+                </div>
+              </div>
+
+              <div class="mb-3 row">
+                <%= form.label :jumlah_terima, "Jumlah Diterima", class: "col-sm-4 col-form-label" %>
+                <div class="col-sm-8">
+                  <%= form.number_field :jumlah_terima, class: "form-control", id:"jumlah_terima", required: true %>
+                </div>
+              </div>
+
+              <!-- Start Hidden Field Section -->
+              <%= form.hidden_field :receive_id, id: "receive_id", :value => @receive.id %>
+              <%= form.hidden_field :warehouse_id, id: "warehouse_id", :value => @receive.warehouse_id %>
+              <%= form.hidden_field :jumlah_harga, id:"jumlah_harga" %>
+              <!-- Finish Hideed Field Section -->
+
+            </div>
+            <div class="modal-footer">
+              <a href="<%= tambahMasterBarang_item_path(params[:id]) %>" class="btn btn-info text-white btn-custom rounded-pill">Tambah Master Barang</a>
+              <button class="btn btn-primary text-white btn-custom rounded-pill" type="submit">Simpan</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    <%= form_for :receive_process, url: receive_process_printQRCode_path(format: :pdf), method: :post, html: {class: "form-horizontal", role: "form", :id => "formvalidate-qr"} do |f|%>
+      <div class="row mx-0">
+        <div class="col-12">
+         <% if current_user.roles.any? { |r| r.name == 'Staff Gudang'} %>
+          <div class="d-grid gap-2 d-md-flex px-1 mx-1 mb-4 justify-content-md-end">
+            <button type="submit" class="btn btn-primary btn-custom rounded-pill print-qr" disabled><i class='fas fa-qrcode'></i> Print QR Code</button>
+          </div>
+        <% end %>
+          <div class="table-responsive">
+              <table class="table table-bordered" id="dataTable">
+                <thead class="bg-primary">
+                <tr class="text-center">
+                  <% if current_user.roles.any? { |r| r.name == 'Staff Gudang'} %>
+                    <th style="text-align: center;">
+                        <input type="checkbox" id="check-all">
+                    </th>
+                  <% end %>
+                  <th class="align-middle" style="width: 8%;">Kode QR</th>
+                  <th class="align-middle" style="width: 24%;">Nama Barang</th>
+                  <th class="align-middle" style="width: 6%;">Jumlah Pesanan</th>
+                  <th class="align-middle" style="width: 6%;">Jumlah Terima</th>
+                  <th class="align-middle" style="width: 7%;">Satuan</th>
+                  <% unless current_user.roles.any? { |r| r.name == 'Staff Gudang' || r.name == 'Kepala Gudang'} %>
+                    <th class="align-middle" style="width: 11%;">Harga Satuan</th>
+                    <th class="align-middle" style="width: 13%;">Jumlah Harga (ex ppn)</th>
+                  <% end %>
+                  <th class="align-middle" style="width: 13%;">Lokasi Penempatan</th>
+                  <th class="align-middle" style="width: 10%;">Aksi</th>
+                </tr>
+                </thead>
+                <% @receive_items.each do |receive_item| %>
+                <tbody>
+                  <% item_measurement = Measurement.find_by(id: receive_item.measurement_id) %>
+                  <tr>
+                    <% if current_user.roles.any? { |r| r.name == 'Staff Gudang'} %>
+                      <td class="align-middle" style="text-align: center;">
+                        <input type="checkbox" name="id_receiveItem[]" id="check-qr" value="<%= receive_item.id %>">
+                      </td>
+                    <% end %>
+                    <td class="align-middle"><%= receive_item.try(:qr_code) %></td>
+                    <td class="align-middle">
+                      <%= getDetailItem(receive_item.item_id) %>
+                    </td>
+                    <td class="align-middle"><%= receive_item.jumlah_pesanan %></td>
+                    <td class="jumlah_pesanan align-middle"><%= receive_item.jumlah_terima %></td>
+                    <td class="align-middle"><%= item_measurement.try(:nama_satuan) %></td>
+                    <% unless current_user.roles.any? { |r| r.name == 'Staff Gudang' || r.name == 'Kepala Gudang'} %>
+                    <!--Rp dihilangkan -->
+                      <td class="harga_satuan align-middle"><%= number_to_currency(receive_item.harga_satuan, unit: "", separator: ",", delimiter: ".") %></td>
+                      <td class="jumlah_harga align-middle"><%= number_to_currency(receive_item.jumlah_harga, unit: "", separator: ",", delimiter: ".") %></td>
+                    <% end %>
+                    <td>
+                        <%= receive_item.try(:lokasi_penempatan)%>
+                    </td>
+                    <td class="align-middle text-center">
+                      <% unless current_user.roles.any? { |r| r.name == 'Kadep Persediaan' || r.name == 'Kepala Gudang' || r.name == 'Staff Gudang'} %>
+                        <%= link_to receive_item_edit_path(receive_item, params[:id]), class:"btn btn-warning btn-sm rounded-circle text-white py-1 mb-1 px-2" do  %>
+                          <i class="fas fa-pencil-alt"></i>
+                        <% end %>
+                        <%= link_to receive_item, method: :delete, data:{ confirm: 'Apakah anda yakin ingin menghapus?'},remote: true, class:"btn btn-danger btn-sm rounded-circle text-white py-1 mb-1 px-2" do %>
+                          <i class="fas fa-trash-alt"></i>
+                        <% end %>
+                      <% end %>
+                      <% unless current_user.roles.any? { |r| r.name != 'Staff Gudang'}%>
+                        <% unless receive_item.lokasi_penempatan.present?%>
+                          <%= link_to inputRack_path(id: receive_item), class:"btn btn-warning btn-sm rounded-circle text-white py-1 mb-1 px-2" do  %>
+                            <i class="fas fa-pencil-alt"></i>
+                          <% end %>
+                        <% else %>
+                          <%= link_to editRack_path(id: receive_item), class:"btn btn-warning btn-sm rounded-circle text-white py-1 mb-1 px-2" do  %>
+                            <i class="fas fa-pencil-alt"></i>
+                          <% end %>
+                        <% end %>
+                      <% end %>
+                    </td>
+                  </tr>
+                <% end %>
+                </tbody>
+                <% unless current_user.roles.any? { |r| r.name == 'Staff Gudang' || r.name == 'Kepala Gudang'} %>
+                  <tfoot>
+                    <tr>
+                      <td class="align-middle text-right text-primary" colspan="6" style="border-width: 0; width: 62%;">
+                        <span>Total Harga Penerimaan </span></td>
+                      <td class="align-middle" colspan="2" style="width: 23%;"><span><%= number_to_currency(@amount_price, unit: "Rp. ", separator: ",", delimiter: ".") %></span></td>
+                    </tr>
+                  </tfoot>
+                <% end %>
+              </table>
+          </div>
+        </div>
+      </div>
+    <% end %>
+</div>
+
+<script>
+  $('li').click(function() {
+    $('li.nav-item.active').removeClass("active");
+    $(this).addClass("active");
+  });
+  $('#staff').select2({
+    dropdownParent: $('#modal_body')
+  });
+  $("#check-all").click(function(){
+      $("input[name='id_receiveItem[]']").not(this).prop('checked', this.checked);
+  });
+
+  $('#check-qr, #check-all').on('change', function(){
+      //when #utepId is checked uncheck #ValenciasId
+      if($(this).prop('checked')) {
+      $('.print-qr').prop('disabled', false);
+      }else{
+      $('.print-qr').prop('disabled', true);
+      }
+  });
+  $("#harga_satuan, #jumlah_terima").keyup(function() {
+    let harga_satuan = $("#harga_satuan").val();
+    let jumlah_terima = $("#jumlah_terima").val();
+
+    let jumlah_harga = parseInt(harga_satuan) * parseInt(jumlah_terima);
+    $("#jumlah_harga").val(jumlah_harga);
+  });
+  $('#negoprice_result').keyup(function(){
+        var value = (this.value.replace(/[^\/\d]/g, ''));
+        var bidprice = parseInt($('#clarification_negotiation_report_bidprice').val());
+        var negoprice = parseInt(value);
+        $('#harga_satuan').val(negoprice);
+        this.value = rupiah_formater(value, 'Rp. ');
+        var selisih = bidprice - negoprice;
+        $('#clarification_negotiation_report_negoprice_bidpricecorrected_gap').val(selisih);
+        selisih = selisih + "";
+        selisih = (selisih.replace(/[^\/\d]/g, ''));
+        selisih = rupiah_formater(selisih, 'Rp. ');
+        $('#negoprice_bidpricecorrected_gap').val(selisih);
+    });
+  $('#negoprice_result').val(rupiah_formater($('#negoprice_result').val(), 'Rp. '));
+
+  $('#formvalidate-qr').submit(function (e, params) {
+      var localParams = params || {};
+
+      if (!localParams.send) {
+          e.preventDefault();
+      }
+
+          //additional input validations can be done hear
+
+    swal({
+            title: "Konfirmasi",
+            text: "Anda yakin cetak QR ini ?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#6A9944",
+            confirmButtonText: "Iya",
+            cancelButtonText: "Tidak",
+            closeOnConfirm: true
+        }, function (isConfirm) {
+            if (isConfirm) {
+                $(e.currentTarget).trigger(e.type, { 'send': true });
+            } else {
+
+        //additional run on cancel  functions can be done hear
+
+            }
+    });
+  });
+</script>

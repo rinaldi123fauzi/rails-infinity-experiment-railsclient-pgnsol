@@ -1,0 +1,144 @@
+<div class="tab-pane fade show active" id="receive-home" role="tabpanel" aria-labelledby="data-tab">
+    <div class="row mx-0 px-5">
+      <div class="container py-4 px-5">
+
+          <div class="mb-3 row">
+            <label for="kodeTransaksiPenerimaan" class="col-sm-4 col-form-label">Kode Transaksi
+              Penerimaan</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" id="kodeTransaksiPenerimaan"
+                     value="<%= @receive.kode_transaksi_penerimaan %>"
+                     readonly>
+            </div>
+          </div>
+
+          <div class="mb-3 row">
+            <label for="tanggalTransaksi" class="col-sm-4 col-form-label">Tanggal
+              Transaksi</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" id="tanggalTransaksi"
+                     value="<%= "#{@receive.created_at.strftime('%d')} #{get_month_name(@receive.created_at.strftime('%-m'))} #{@receive.created_at.strftime('%Y')}" %>" readonly>
+            </div>
+          </div>
+
+          <div class="mb-3 row">
+            <label for="judulBASTDO" class="col-sm-4 col-form-label">Judul BAST/DO</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" value="<%= @receive.judul_bast %>" readonly>
+            </div>
+          </div>
+
+          <div class="mb-3 row">
+            <label for="nomorBASTDO" class="col-sm-4 col-form-label">Nomor BAST/DO</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" value="<%= @receive.nomor_bast %>" readonly>
+            </div>
+          </div>
+
+          <div class="mb-3 row">
+            <label for="tanggalBASTDO" class="col-sm-4 col-form-label">Tanggal BAST/DO</label>
+            <div class="col-sm-8">
+              <input class="form-control" value="<%= "#{@receive.tanggal_bast.strftime('%d')} #{get_month_name(@receive.tanggal_bast.strftime('%-m'))} #{@receive.tanggal_bast.strftime('%Y')}" %>" readonly>
+            </div>
+          </div>
+
+          <div class="mb-3 row">
+            <label for="jumlahHargaBASTDO" class="col-sm-4 col-form-label">Jumlah Harga BAST/DO
+              (ex ppn)</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" id=""
+                     value="<%= number_to_currency(@receive.jumlah_harga_bast, unit: "Rp. ", separator: ",", delimiter: ".")%>" readonly>
+            </div>
+          </div>
+
+          <div class="mb-3 row">
+            <label for="namaPenyediaMaterial" class="col-sm-4 col-form-label">Nama Penyedia Material</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" id=""
+                     value="<%= @receive.nama_penyedia %>" readonly>
+            </div>
+          </div>
+
+          <div class="mb-3 row">
+            <label for="nomorPO" class="col-sm-4 col-form-label">Nomor PO</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" value="<%= @receive.nomor_po %>" readonly>
+            </div>
+          </div>
+
+          <div class="mb-3 row">
+            <label for="tanggalPO" class="col-sm-4 col-form-label">Tanggal PO</label>
+            <div class="col-sm-8">
+              <input class="form-control" id="tanggalPO" value="<%= "#{@receive.tanggal_po.strftime('%d')} #{get_month_name(@receive.tanggal_po.strftime('%-m'))} #{@receive.tanggal_po.strftime('%Y')}" %>" readonly>
+            </div>
+          </div>
+
+          <div class="mb-3 row">
+            <label for="kodeProyek" class="col-sm-4 col-form-label">Kode <%= @receive.kategori_kode.camelize %></label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" id="kodeProyek"
+                     value="<%= @receive.kode_proyek %>" readonly>
+            </div>
+          </div>
+
+          <div class="mb-3 row">
+            <label for="namaProyek" class="col-sm-4 col-form-label">Nama <%= @receive.kategori_kode.camelize %></label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" id="namaProyek"
+                     value="<%= @receive.nama_proyek %>" readonly>
+            </div>
+          </div>
+
+          <div class="mb-3 row">
+            <label for="kodeAkun" class="col-sm-4 col-form-label">Kode Akun</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" id="kodeAkun" value="<%= @receive.kode_akun %>" readonly>
+            </div>
+          </div>
+
+          <div class="mb-3 row">
+            <label for="pemilikMaterial" class="col-sm-4 col-form-label">Pemilik
+              Barang</label>
+            <div class="col-sm-8">
+              <% division = Division.find_by(id: @receive.division_id) %>
+              <input type="text" class="form-control" value="<%= division.nama_divisi %>" readonly>
+            </div>
+          </div>
+
+          <div class="mb-3 row">
+            <label for="uploadFile" class="col-sm-4 col-form-label">Upload File</label>
+            <div class="col-sm-8">
+                <% @receive.dokumen.each do |d| %>
+                  <%= text_field :receive, :dokumen, multiple: true, value: d.identifier, class:"form-control", :readonly => true %>
+                  <% link_to "Download Dokumen", @receive.dokumen[0].url, :target => "_blank" %>
+                <% end %>
+            </div>
+          </div>
+
+          <div class="mb-3 row">
+            <label for="pemilikMaterial" class="col-sm-4 col-form-label">Inputer</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" value="<%= @receive.inputer %>" readonly>
+            </div>
+          </div>
+
+          <div class="mb-3 row">
+            <label for="pemilikMaterial" class="col-sm-4 col-form-label">Keterangan</label>
+            <div class="col-sm-8">
+              <textarea class="form-control" disabled><%= @receive.catatan%></textarea>
+            </div>
+          </div>
+
+          <% @getRole = RoleAssignment.find_by_user_id(current_user.id) %>          
+          <% unless current_user.roles.any? { |r| r.name != 'Admin Persediaan'} %>
+            <% if (@receive.status_id < 3) or (@receive.status_id >= 11 and @receive.id_role == @getRole.role_id) %>
+              <div class="mb-3 justify-content-md-end">
+                <% link_to 'Kembali', receives_path, class:"btn btn-info text-white btn-custom rounded-pill" %>
+                
+                <%= link_to 'Edit', edit_receife_path(@receive), class:"btn btn-info text-white btn-custom rounded-pill mr-2" %>
+              </div>
+            <% end %>
+          <% end %>
+      </div>
+    </div>
+</div>

@@ -1,0 +1,47 @@
+<!--Role Staff Gudang-->
+<% unless current_user.roles.any? { |r| r.name != 'Staff Gudang'}%>
+    <%@getStatus = Sale.find(params[:id])%>
+    <% if @getStatus.status_id == 19 %>
+        <% getJumlahKeluar = SaleItem.find_by_sale_id(params[:id]) %>
+        <% unless getJumlahKeluar.jumlah_keluar.nil? %>
+            <%= form_for :sale_process, url: sale_process_submitStaffGudang_path, method: :post, html: {class: "form-horizontal", role: "form", :id => "formvalidate"} do |f|%>
+                <input type="hidden" name="sale_id" value="<%= params[:id] %>">
+                <input type="hidden" name="status_id" value="20"> <%# belum di review oleh staff gudang %>
+                <input type="hidden" name="id_role" value="5"> <%# Staff Gudang %>
+                <div class="d-grid gap-2 d-md-flex px-5 mx-5 mb-4 justify-content-md-end">
+                    <input type="submit" class="btn btn-success btn-custom rounded-pill" value="Submit">
+                </div>
+            <% end %>
+        <% end %>
+    <% end %>
+    <script>
+        $('#formvalidate').submit(function (e, params) {
+                var localParams = params || {};
+
+                if (!localParams.send) {
+                    e.preventDefault();
+                }
+
+                    //additional input validations can be done hear
+
+            swal({
+                    title: "Konfirmasi",
+                    text: "Anda yakin submit data ini ?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#6A9944",
+                    confirmButtonText: "Iya",
+                    cancelButtonText: "Tidak",
+                    closeOnConfirm: true
+                }, function (isConfirm) {
+                    if (isConfirm) {
+                        $(e.currentTarget).trigger(e.type, { 'send': true });
+                    } else {
+
+                //additional run on cancel  functions can be done hear
+
+                    }
+            });
+        });
+    </script>
+<% end %>

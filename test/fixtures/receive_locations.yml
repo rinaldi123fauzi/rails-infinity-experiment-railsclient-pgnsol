@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  recieve_item: one
+  recieve: one
+  warehouse: one
+  rack_location: MyString
+
+two:
+  recieve_item: two
+  recieve: two
+  warehouse: two
+  rack_location: MyString

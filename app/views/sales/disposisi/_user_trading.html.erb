@@ -1,0 +1,43 @@
+<!--Role Admin Persediaan-->
+<% unless current_user.roles.any? { |r| r.name != 'User Trading'} %>
+    <% if @sale.status_id == 15 %>
+        <% unless SaleItem.find_by_sale_id(@sale.id).nil? %>
+            <%= form_for :sale_process, url: sale_process_submitUserTrading_path, method: :post, html: {class: "form-horizontal", id: "formvalidate", role: "form"} do |form| %>
+                <input type="hidden" name="sale_id" value="<%= params[:id] %>">
+                <input type="hidden" name="status_id" value="18"> <%# belum di review oleh staff gudang %>
+                <input type="hidden" name="id_role" value="4"> <%# Staff Gudang %>
+                <button class="btn btn-success btn-custom rounded-pill" type="submit">Submit</button>
+            <% end %>
+        <% end %>
+    <% end %>
+    <script>
+        $('#formvalidate').submit(function (e, params) {
+                var localParams = params || {};
+
+                if (!localParams.send) {
+                    e.preventDefault();
+                }
+
+                    //additional input validations can be done hear
+
+            swal({
+                    title: "Konfirmasi",
+                    text: "Anda yakin submit data ini ?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#6A9944",
+                    confirmButtonText: "Iya",
+                    cancelButtonText: "Tidak",
+                    closeOnConfirm: true
+                }, function (isConfirm) {
+                    if (isConfirm) {
+                        $(e.currentTarget).trigger(e.type, { 'send': true });
+                    } else {
+
+                //additional run on cancel  functions can be done hear
+
+                    }
+            });
+        });
+    </script>
+<% end %>

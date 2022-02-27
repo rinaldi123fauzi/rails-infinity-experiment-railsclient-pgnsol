@@ -1,0 +1,44 @@
+<!--Role Admin Persediaan-->
+<% unless current_user.roles.any? { |r| r.name != 'Admin Persediaan'} %>
+    <% @sale = Sale.find(params[:id])%>
+    <% if @sale.status_id == 24 %>
+        <div class="row mb-3 px-2">
+            <div class="col p-2 pl-4 bg-gradient-primary text-white">
+                <h5>Status Pengeluaran Material</h5>
+            </div>
+        </div>
+        <%= form_for :sale_process, url: sale_process_submitAdminPersediaan_path, method: :post, html: {class: "form-horizontal", role: "form", :id => "formvalidate"} do |f|%>
+            <div class="row px-5 g-2 mx-5 mb-2" id="riwayat-permintaan">
+                <div class="col-2">
+                    Catatan :
+                </div>
+                <input type="hidden" name="sale_id" value="<%= params[:id] %>">
+                <input type="hidden" name="id_role" value="3"> <%# Kadep Persediaan %>
+                <div class="col-10">
+                    <textarea class="form-control" name="catatan_penjualan" rows="4" required></textarea>
+                </div>
+                
+                <div class="col-2 mb-2 my-3">
+                    Status :
+                </div>
+                <div class="col-10 my-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="status_id" id="status-validate" value="16"> <%# belum di review oleh kadep persediaan %>
+                        <label class="form-check-label">
+                        Approved
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="status_id" id="status-validate" value="11">
+                        <label class="form-check-label">
+                        Rejected
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="d-grid gap-2 d-md-flex px-5 mx-5 mb-4 justify-content-md-end">
+                <input type="submit" class="btn btn-success btn-custom rounded-pill" value="Submit">
+            </div>
+        <% end %>
+    <% end %>
+<% end %>

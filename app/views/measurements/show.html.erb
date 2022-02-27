@@ -1,0 +1,31 @@
+<% unless notice.blank? %>
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  <strong id="notice"><%= notice %></strong>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<% end %>
+
+<h1 class="my-5 text-center font-weight-bolder text-primary">Detail Satuan Ukur</h1>
+
+<div class="row mx-0 px-5">
+  <div class="container py-4 px-5">
+    <form action="">
+
+      <div class="mb-3 row">
+        <label for="" class="col-sm-4 col-form-label">Nama Satuan</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" value="<%= @measurement.nama_satuan %>" readonly>
+        </div>
+      </div>
+
+      <div class="mb-3 justify-content-md-end">
+        <%= link_to 'Kembali', measurements_path, class:"btn btn-secondary text-white btn-custom rounded-pill pull-left" %>
+
+        <%= link_to 'Edit', edit_measurement_path(@measurement), class:"btn btn-warning text-white btn-custom rounded-pill pull-right" %>
+      </div>
+    </form>
+  </div>
+</div>
+

@@ -1,0 +1,102 @@
+<%= form_with(model: stock_opname, local: true) do |form| %>
+  <% if stock_opname.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(stock_opname.errors.count, "error") %> prohibited this stock_opname from being saved:</h2>
+
+      <ul>
+      <% stock_opname.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+
+  <div class="row mx-0 px-5">
+    <div class="container py-4 px-5">
+
+      <div class="mb-3 row">
+        <%= form.label :kode_qr_code, "kode qr code", class: "col-sm-4 col-form-label font-weight-bolder" %>
+        <div class="col-sm-8">
+          <%= form.text_field :kode_qr_code, class:"form-control", readonly: true %>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <%= form.label :tanggal, "tanggal", class: "col-sm-4 col-form-label font-weight-bolder" %>
+        <div class="col-sm-8">
+          <%= form.date_field :tanggal, class:"form-control"%>
+        </div>
+      </div>
+
+      <div class="mb-3 row" id="">
+        <%= form.label :jumlah_tersedia, class: "col-sm-4 col-form-label font-weight-bolder" %>
+        <div class="col-sm-8">
+          <%= form.text_field :jumlah_tersedia, class:"form-control", readonly: true %>
+        </div>
+      </div>
+
+
+      <div class="mb-3 row">
+        <%= form.label :lokasi_penempatan, class: "col-sm-4 col-form-label font-weight-bolder" %>
+        <div class="col-sm-8">
+          <%= form.text_field :lokasi_penempatan, class:"form-control", readonly: true %>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <%= form.label :jumlah_fisik, class: "col-sm-4 col-form-label font-weight-bolder" %>
+        <div class="col-sm-8">
+          <%= form.text_field :jumlah_fisik, class:"form-control", readonly: true %>
+        </div>
+      </div>
+
+
+      <div class="mb-3 row">
+        <%= form.label :selisih, class: "col-sm-4 col-form-label font-weight-bolder" %>
+        <div class="col-sm-8">
+          <%= form.text_field :selisih, class:"form-control", readonly: true %>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <%= form.label :keterangan, class: "col-sm-4 col-form-label font-weight-bolder" %>
+        <div class="col-sm-8">
+          <%= form.text_field :keterangan, class:"form-control", readonly: true %>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <%= form.label :gudang_penempatan, "Gudang Penempatan", class: "col-sm-4 col-form-label font-weight-bolder" %>
+        <div class="col-sm-8">
+          <%= collection_select :warehouse, :warehouse_id, Warehouse.all, :id, :nama_gudang, {prompt: "Pilih Nama Gudang"}, class: "form-control" %>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <%= form.label :item_id, "Nama Barang", class: "col-sm-4 col-form-label font-weight-bolder" %>
+        <div class="col-sm-8">
+          <%= collection_select :item, :item_id, Item.all, :id, :nama_barang, {prompt: "Pilih Nama Barang"}, class: "form-control" %>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <%= form.label :measurement_id, "Satuan", class: "col-sm-4 col-form-label" %>
+        <div class="col-sm-8">
+          <%= form.collection_select :measurement_id, Measurement.all, :id, :nama_satuan, {prompt: "pilih satuan"}, class: "form-control" %>
+        </div>
+      </div>
+
+
+
+      <!--Start Hidden Fields Section-->
+      <%= form.hidden_field :user_id, id:'user_id', :value => current_user.id %>
+      <%= form.hidden_field :status_id, id:'status_id', :value => 1 %>
+      <!--Finish Hidden Fields Section-->
+
+
+      <div class="col-sm-12">
+        <div class="mb-3 float-right">
+          <button class="btn btn-primary text-white btn-custom rounded-pill" data-dismiss="modal">Simpan</button>
+        </div>
+<% end %>

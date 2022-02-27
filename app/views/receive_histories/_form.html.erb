@@ -1,0 +1,42 @@
+<%= form_with(model: receive_history, local: true) do |form| %>
+  <% if receive_history.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(receive_history.errors.count, "error") %> prohibited this receive_history from being saved:</h2>
+
+      <ul>
+      <% receive_history.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :receive_id %>
+    <%= form.text_field :receive_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :status_id %>
+    <%= form.text_field :status_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :user_id %>
+    <%= form.text_field :user_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :role_id %>
+    <%= form.text_field :role_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :catatan_penerimaan %>
+    <%= form.text_field :catatan_penerimaan %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

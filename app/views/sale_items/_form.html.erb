@@ -1,0 +1,83 @@
+<%= form_with(model: sale_item, local: true) do |form| %>
+  <% if sale_item.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(sale_item.errors.count, "error") %> prohibited this sale_item from being saved:</h2>
+
+      <ul>
+      <% sale_item.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="row mx-0 px-5">
+    <div class="container py-4 px-5">
+
+      <% if current_user.roles.any? { |r| r.name == 'superadmin' || r.name == 'User Komersial' } %>
+      <div class="mb-3 row">
+        <%= form.label :jumlah_permintaan, "Jumlah Permintaan", class: "col-sm-4 col-form-label" %>
+        <div class="col-sm-8">
+          <%= form.number_field :jumlah_permintaan, class: 'form-control' %>
+        </div>
+      </div>
+      <% end %>
+
+
+      <% if current_user.roles.any? { |r| r.name == 'superadmin' || r.name == 'Staff Gudang' } %>
+
+<!--    <div class="mb-3 row">-->
+        <%#= form.label :jumlah_keluar, "Jumlah Keluar", class: "col-sm-4 col-form-label" %>
+<!--        <div class="col-sm-8">-->
+          <%#= form.number_field :jumlah_keluar, class: 'form-control' %>
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div class="mb-3 row">-->
+        <%#= form.label :nama_barang, "Nama Barang", class: "col-sm-4 col-form-label" %>
+<!--        <div class="col-sm-8">-->
+          <%#= form.collection_select :item_id, Item.all, :id, :nama_barang, {prompt: true}, class: "form-control" %>
+<!--        </div>-->
+<!--      </div>-->
+
+      <div class="mb-3 row">
+        <%= form.label :jumlah_tersedia, "Jumlah Tersedia", class: "col-sm-4 col-form-label" %>
+        <div class="col-sm-8">
+          <%= form.number_field :jumlah_tersedia, class: 'form-control', :readonly => true %>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <%= form.label :jumlah_keluar, "Jumlah Keluar", class: "col-sm-4 col-form-label" %>
+        <div class="col-sm-8">
+          <%= form.number_field :jumlah_keluar, class: 'form-control' %>
+        </div>
+      </div>
+
+      <% end %>
+
+      <% if current_user.roles.any? { |r| r.name == 'superadmin' || r.name == 'Staff Gudang' } %>
+
+        <div class="mb-3 row">
+          <%= form.label :jumlah_permintaan, "Jumlah Permintaan", class: "col-sm-4 col-form-label" %>
+          <div class="col-sm-8">
+            <%= form.number_field :jumlah_permintaan, class: 'form-control', :readonly => true %>
+          </div>
+        </div>
+
+        <% end %>
+
+      <!-- Start Hidden Field Section -->
+      <%= form.hidden_field :sale_id, id: 'sale_id', value: @sale_item.sale_id %>
+      <!-- End Hidden Field Section -->
+
+      <div class="col-sm-12">
+        <div class="mb-3 float-right">
+          <button class="btn btn-primary text-white btn-custom rounded-pill">
+            Simpan Perubahan
+          </button>
+        </div>
+      </div>
+    </div>
+    </div>
+<% end %>

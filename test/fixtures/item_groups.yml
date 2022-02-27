@@ -1,0 +1,7 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  kelompok_barang: MyString
+
+two:
+  kelompok_barang: MyString

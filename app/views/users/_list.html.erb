@@ -1,0 +1,51 @@
+<div class="row">
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-header"><i class="fa fa-table"></i> Data Users
+        <div class="float-sm-right">
+          <a href="<%= new_user_path %>" class="btn btn-sm btn-light waves-effect waves-light"><i class="fa fa-plus mr-1"></i> Tambah</a>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table id="default-datatable" class="table table-bordered">
+            <thead>
+            <tr>
+              <th class="text-center" style="width: 50px;">No</th>
+              <th>Nama</th>
+              <th>Username</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th class="text-center" style="width: 100px;">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% @users.each_with_index do |user, index| %>
+              <tr>
+                <td class="text-center"><%= index+1 %></td>
+                <td><%= user.name %></td>
+                <td><%= user.username %></td>
+                <td><%= user.role_assignments.each_with_index.map {|role_assignment| "#{role_assignment.role.try(:name)}"}.join(", ") %></td>
+                <% if user.state %>
+                  <td>Aktif</td>
+                <% else %>
+                  <td>Tidak Aktif</td>
+                <% end %>
+                <td class="text-center">
+                  <%= link_to '', edit_user_path(user), class: 'fa fa-pencil btn btn-sm btn-warning waves-effect waves-light m-1' %>
+                </td>
+              </tr>
+            <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--<script>-->
+<!--    $(document).ready(function() {-->
+<!--        $('#default-datatable').DataTable();-->
+<!--    });-->
+<!--</script>-->

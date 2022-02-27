@@ -1,0 +1,25 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  jenis_penerimaan: MyString
+  nomor_pengeluaran: MyString
+  kode_proyek: MyString
+  nama_proyek: MyString
+  jenis_pengeluaran: MyString
+  asal_gudang: MyString
+  gudang_pembelian: MyString
+  nama_inputer: MyString
+  dokumen_retur: 
+  keterangan_retur: MyString
+
+two:
+  jenis_penerimaan: MyString
+  nomor_pengeluaran: MyString
+  kode_proyek: MyString
+  nama_proyek: MyString
+  jenis_pengeluaran: MyString
+  asal_gudang: MyString
+  gudang_pembelian: MyString
+  nama_inputer: MyString
+  dokumen_retur: 
+  keterangan_retur: MyString

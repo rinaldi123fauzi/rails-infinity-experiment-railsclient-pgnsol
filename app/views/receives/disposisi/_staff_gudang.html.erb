@@ -1,0 +1,51 @@
+<!--Role Staff Gudang-->
+<% unless current_user.roles.any? { |r| r.name != 'Staff Gudang'}%>
+    <%@getStatus = Receive.find(params[:id])%>
+    <% if @getStatus.status_id < 7 || @getStatus.status_id == 11%>
+        <% getQR = ReceiveItem.find_by_receive_id(params[:id]) %>
+        <% unless getQR.qr_code.nil? %>
+            <% unless getQR.lokasi_penempatan.nil? %>
+                <% if @getStatus.status_id == 11 || @getStatus.status_id == 6%>
+                    <%= form_for :receive_process, url: receive_process_sendStaffGudang_path, method: :post, html: {class: "form-horizontal", role: "form", :id => "formvalidate-staff"} do |f|%>
+                        <div class="row px-5 g-2 mx-5 mb-2" id="riwayat-permintaan">
+                            <input type="hidden" name="receive_id" value="<%= params[:id] %>">
+                        </div>
+                        <div class="d-grid gap-2 d-md-flex px-5 mx-5 mb-4 justify-content-md-end">
+                            <input type="submit" class="btn btn-success btn-custom rounded-pill" value="Submit">
+                        </div>
+                    <% end %>
+                <% end %>
+            <% end %>
+        <% end %>
+    <% end %>
+    <script>
+        $('#formvalidate-staff').submit(function (e, params) {
+            var localParams = params || {};
+
+            if (!localParams.send) {
+                e.preventDefault();
+            }
+
+                //additional input validations can be done hear
+
+            swal({
+                    title: "Konfirmasi",
+                    text: "Anda yakin submit data ini ?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#6A9944",
+                    confirmButtonText: "Iya",
+                    cancelButtonText: "Tidak",
+                    closeOnConfirm: true
+                }, function (isConfirm) {
+                    if (isConfirm) {
+                        $(e.currentTarget).trigger(e.type, { 'send': true });
+                    } else {
+
+                //additional run on cancel  functions can be done hear
+
+                    }
+            });
+        });
+    </script>
+<% end %>

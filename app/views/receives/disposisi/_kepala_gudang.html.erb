@@ -1,0 +1,150 @@
+<% if current_user.roles.any? { |r| r.name == 'Kepala Gudang'} %>
+    <%@receive = Receive.find(params[:id])%>
+    <% unless @receive.status_id != 8 %>
+        <div class="row mb-3 px-2">
+        <div class="col p-2 pl-4 bg-gradient-primary text-white">
+            <h5>Status Penerimaan Material</h5>
+        </div>
+        </div>
+        <div class="row px-5 g-2 mx-5 mb-2">
+            <div class="col-2 mb-2 my-3">
+                    Status :
+                </div>
+                <div class="col-10 my-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="pilih_status" id="status-validate" value="posting">
+                        <label class="form-check-label">
+                        Approved
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="pilih_status" id="status-validate" value="revisi">
+                        <label class="form-check-label">
+                        Rejected
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="posting">
+        <%= form_for :receive_process, url: receive_process_setPosting_path, method: :post, html: {class: "form-horizontal", role: "form", :id => "formvalidate-posting"} do |f|%>
+            <input type="hidden" name="kategori" value="posting">
+            <div class="row px-5 g-2 mx-5 mb-2" id="riwayat-permintaan">
+            <input type="hidden" name="receive_id" value="<%= params[:id] %>">
+            <input type="hidden" value="9" name="status">
+            <input type="hidden" value="approved" name="status_approval">
+            </div>
+            <div class="d-grid gap-2 d-md-flex px-5 mx-5 mb-4 justify-content-md-end">
+            <input type="submit" class="btn btn-success btn-custom rounded-pill" value="Posting">
+            </div>
+        <% end %>
+        </div>
+
+        <div class="revisi">
+        <%= form_for :receive_process, url: receive_process_setPosting_path, method: :post, html: {class: "form-horizontal", role: "form", :id => "formvalidate-revisi"} do |f|%>
+            <input type="hidden" name="kategori" value="revisi">
+            <input type="hidden" name="receive_id" value="<%= params[:id] %>">
+            <input type="hidden" value="revisi" name="status_approval">
+            <div class="row px-5 g-2 mx-5 mb-2" id="riwayat-permintaan">
+            <div class="col-2">
+                Catatan :
+            </div>
+            <div class="col-10">
+                <textarea class="form-control" name="catatan_penerimaan" rows="4" required></textarea>
+            </div>
+
+            <div class="col-2">
+                Kirim :
+            </div>
+            <div class="col-10">
+                
+                <input type="radio" id="status-validate" value="4" name="role">
+                <label for="staff-gudang">Staff Gudang</label>
+                <input type="radio" id="status-validate" value="2" name="role">
+                <label for="admin-persediaan"> Admin Persediaan</label>
+                
+            </div>
+            </div>
+            <div class="d-grid gap-2 d-md-flex px-5 mx-5 mb-4 justify-content-md-end">
+            <input type="submit" class="btn btn-success btn-custom rounded-pill" value="Submit">
+            </div>
+        <% end %>
+        </div>
+    <% end %>
+    
+    <script>
+        $("input[name='pilih_status']").click(function() {
+            var value = $(this).val();
+            if (value == "revisi"){
+            $('div.revisi').show();
+            $('div.posting').hide();
+            }else{
+            $('div.revisi').hide();
+            $('div.posting').show();
+            }
+        });
+
+        $('.revisi').hide();
+        $('.posting').hide();
+
+        document.getElementById("status-validate").required = true;
+        $('#formvalidate-posting').submit(function (e, params) {
+                var localParams = params || {};
+
+                if (!localParams.send) {
+                    e.preventDefault();
+                }
+
+                    //additional input validations can be done hear
+
+            swal({
+                    title: "Konfirmasi",
+                    text: "Anda yakin posting data ini ?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#6A9944",
+                    confirmButtonText: "Iya",
+                    cancelButtonText: "Tidak",
+                    closeOnConfirm: true
+                }, function (isConfirm) {
+                    if (isConfirm) {
+                        $(e.currentTarget).trigger(e.type, { 'send': true });
+                    } else {
+
+                //additional run on cancel  functions can be done hear
+
+                    }
+            });
+        });
+
+        $('#formvalidate-revisi').submit(function (e, params) {
+            var localParams = params || {};
+
+            if (!localParams.send) {
+                e.preventDefault();
+            }
+
+                //additional input validations can be done hear
+
+        swal({
+                title: "Konfirmasi",
+                text: "Anda yakin revisi data ini ?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#6A9944",
+                confirmButtonText: "Iya",
+                cancelButtonText: "Tidak",
+                closeOnConfirm: true
+            }, function (isConfirm) {
+                if (isConfirm) {
+                    $(e.currentTarget).trigger(e.type, { 'send': true });
+                } else {
+
+            //additional run on cancel  functions can be done hear
+
+                }
+        });
+    });
+    </script>
+<% end %>

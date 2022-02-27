@@ -1,0 +1,369 @@
+<p id="notice"><%= notice %></p>
+
+<h1 class="my-5 text-center font-weight-bolder">Pengeluaran Keproyekan Barang</h1>
+
+<div class="row mx-5 mb-3">
+  <div class="col-12">
+    <div class="navbar navbar-expand-sm menu-bar">
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <a class="nav-link active" id="data-project-tab" data-toggle="tab" href="#data-project" role="tab" aria-controls="data-project" aria-selected="true">Data Keproyekan</a>
+        </li>
+        <li class="nav-item" role="presentation">
+          <a class="nav-link" id="data-project-item-tab" data-toggle="tab" href="#data-project-item" role="tab" aria-controls="receive-item" aria-selected="true">Data Barang</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="data-project" role="tabpanel" aria-labelledby="data-project-tab">
+    <div class="row mx-0 px-5">
+      <div class="container py-4 px-5">
+
+        <div class="mb-3 row">
+          <label for="" class="col-sm-4 col-form-label font-weight-bolder">Nomor Pengeluaran </label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" value="<%= @project.nomor_pengeluaran %>" readonly>
+          </div>
+        </div>
+
+        <div class="mb-3 row">
+          <label for="" class="col-sm-4 col-form-label font-weight-bolder">Tanggal Pengeluaran</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="kodeTransaksiPenerimaan" value="<%= @project.tanggal_pengeluaran %>" readonly>
+          </div>
+        </div>
+
+        <div class="mb-3 row">
+          <label for="" class="col-sm-4 col-form-label font-weight-bolder">Jenis Pengeluaran</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" value="<%= @project.jenis_pengeluaran %>" readonly>
+          </div>
+        </div>
+
+        <div class="mb-3 row">
+          <label for="" class="col-sm-4 col-form-label font-weight-bolder">Nama Inputer</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" value="<%= @project.nama_inputer %>" readonly>
+          </div>
+        </div>
+
+        <div class="mb-3 row">
+          <label for="" class="col-sm-4 col-form-label font-weight-bolder">Kode Proyek</label>
+          <div class="col-sm-8">
+<!--            <input type="text" class="form-control" value="<%#= @project.kode_proyek %>" readonly>-->
+            <input type="text" class="form-control" value="<%= @project.kode_proyek %>" readonly>
+          </div>
+        </div>
+
+        <div class="mb-3 row">
+          <label for="" class="col-sm-4 col-form-label font-weight-bolder">Nama Proyek</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" value="<%= @project.nama_proyek %>" readonly>
+          </div>
+        </div>
+
+        <div class="mb-3 row">
+          <label for="" class="col-sm-4 col-form-label font-weight-bolder">Kode Akun</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" value="<%= @project.kode_akun %>" readonly>
+          </div>
+        </div>
+
+        <div class="mb-3 row">
+          <label for="" class="col-sm-4 col-form-label font-weight-bolder">Nama Akun</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" value="<%= @project.nama_akun %>" readonly>
+          </div>
+        </div>
+
+        <div class="mb-3 row" id="">
+          <label for="" class="col-sm-4 col-form-label font-weight-bolder">keterangan Pengeluaran</label>
+          <div class="col-sm-8">
+            <textarea name="" id="" cols="30" rows="10" class="form-control" readonly><%= @project.keterangan_pengeluaran %></textarea>
+          </div>
+        </div>
+
+        <div class="mb-3 row">
+          <label for="" class="col-sm-4 col-form-label font-weight-bolder">Dokumen Pengeluaran</label>
+          <div class="col-sm-8">
+            <% if @project.dokumen_pengeluaran.blank? %>
+              <h5 class="text-danger">tidak ada dokumen yg di upload</h5>
+            <%  else  %>
+              <% @project.dokumen_pengeluaran.each do |d|  %>
+                <%=  text_field :project, :dokumen_pengeluaran, multiple: true, value: d.identifier, class:"form-control", :readonly => true  %>
+                <%=  link_to "Download disini", @project.dokumen_pengeluaran[0].url, :target => "_blank"  %>
+              <%  end  %>
+            <%  end %>
+          </div>
+        </div>
+
+        <div class="mb-3 justify-content-md-end">
+          <%= link_to 'Back', projects_path, class:"btn btn-info text-white btn-custom rounded-pill" %>
+          <%= link_to 'Edit', edit_project_path(@project), class:"btn btn-info text-white btn-custom rounded-pill mr-2" %>
+
+<!--          <button class="btn btn-info text-white btn-custom rounded-pill" type="submit">-->
+<!--            Next-->
+<!--          </button>-->
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="tab-pane fade" id="data-project-item" role="tabpanel" aria-labelledby="data-project-item-tab">
+    <div class="row mx-0 px-5">
+      <div class="col-12">
+        <br>
+        <div class="table-responsive">
+          <table class="table table-bordered" id="dataTable">
+            <thead class="bg-primary">
+            <tr class="text-center">
+              <th class="align-middle">Kode QR</th>
+              <th class="align-middle" style="width: 24%;">Nama Barang</th>
+              <th class="align-middle" style="width: 24%;">Spesifikasi Barang</th>
+              <th class="align-middle" style="width: 7%;">Satuan</th>
+              <th class="align-middle" style="width: 8%;">Kode Proyek</th>
+              <th class="align-middle" style="width: 8%;">Nama Proyek</th>
+              <th class="align-middle" style="width: 11%;">Gudang</th>
+              <th class="align-middle" style="width: 11%;">Lokasi Penempatan</th>
+              <th class="align-middle" style="width: 11%;">Jumlah Tersedia</th>
+              <th class="align-middle" style="width: 11%;">Jumlah Permintaan</th>
+              <th class="align-middle" style="width: 11%;">Jumlah Dikeluarkan</th>
+              <% if current_user.roles.any? { |r| r.name == 'superadmin' || r.name == 'Staff Gudang' || r.name == 'User EPC' } %>
+                <th class="align-middle" style="width: 10%;">Aksi</th>
+              <% end %>
+            </tr>
+            </thead>
+            <% @project_items.each do |project_item| %>
+            <tbody>
+
+            </tbody>
+            <% end %>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <%= form_for(@project_item, url: project_items_path, method: 'POST') do |form| %>
+      <% if @project_item.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(project_item.errors.count, "error") %> prohibited this receive_item from being saved:</h2>
+          <ul>
+            <% project_item.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+<!--      <button type="button" class="btn btn-primary btn-custom rounded-pill text" style="margin-left: 20px;" data-toggle="modal" data-target="#tambahBarang">-->
+<!--        <i id="my-icon" class="fas fa-plus"></i>-->
+<!--      </button>-->
+      <br>
+      <br>
+
+      <div class="modal fade" id="tambahBarang" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+          <div class="modal-content">
+            <div class="modal-header justify-content-md-center bg-gradient-primary">
+              <h5 class="modal-title text-white" id="">Tambah Pengeluaran Barang Keproyekan</h5>
+              <button type="button" class="close text-white" data-dismiss="modal">&times;</button> 
+            </div>
+            <div class="modal-body">
+
+<!--              <div class="mb-3 row">-->
+                <%#= form.label :kode_proyek, "Kode Proyek", class: "col-sm-4 col-form-label font-weight-bolder" %>
+<!--                <div class="col-sm-8">-->
+                  <%#= select_tag "select_benef", options_for_select(getProject()), :class => "form-control selectProject" %>
+<!--                                    <textarea class="form-control" id="spesifikasi-barang" readonly></textarea>-->
+<!--                </div>-->
+<!--              </div>-->
+
+<!--              <div class="mb-3 row">-->
+                <%#= form.label :nama_proyek, "Nama Proyek", class: "col-sm-4 col-form-label font-weight-bolder" %>
+<!--                <div class="col-sm-8">-->
+<!--                  <input type="text" class="form-control" readonly id="nama_proyek">-->
+<!--                </div>-->
+<!--              </div>-->
+
+              <div class="mb-3 row">
+                <%= form.label :kode_barang, "Kode QR", class: "col-sm-4 col-form-label font-weight-bolder" %>
+                <div class="col-sm-8">
+                  <%= form.collection_select :item_id, Item.all, :id, :kode_qr, {prompt: "pilih kode barang"}, class: "form-control", id:"kode-barang", onchange: "setNamaBarang()" %>
+                </div>
+              </div>
+
+              <div class="mb-3 row">
+                <%= form.label :nama_barang, "Nama Barang", class: "col-sm-4 col-form-label font-weight-bolder" %>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="nama-barang" readonly>
+                </div>
+              </div>
+
+              <div class="mb-3 row">
+                <%= form.label :satuan_id, "Satuan", class: "col-sm-4 col-form-label font-weight-bolder" %>
+                <div class="col-sm-8">
+                  <%= form.collection_select :measurement_id, Measurement.all, :id, :nama_satuan, { prompt: true }, class: "form-control"%>
+                </div>
+              </div>
+
+              <div class="mb-3 row">
+                <%= form.label :jumlah_tersedia, "Jumlah Tersedia", class: "col-sm-4 col-form-label font-weight-bolder" %>
+                <div class="col-sm-8">
+                  <%= form.text_field :jumlah_tersedia, class: "form-control" %>
+                </div>
+              </div>
+
+              <div class="mb-3 row">
+                <%= form.label :jumlah_keluar, "Jumlah Dikeluarkan", class: "col-sm-4 col-form-label font-weight-bolder" %>
+                <div class="col-sm-8">
+                  <%= form.text_field :jumlah_keluar, class: "form-control" %>
+                </div>
+              </div>
+
+              <!-- Start Hidden Field Section -->
+              <%= form.hidden_field :project_id, id: "project_id", :value => @project.id %>
+              <!-- Finish Hideed Field Section -->
+
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-info text-white btn-custom rounded-pill" type="submit">Simpan</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mx-0">
+        <div class="col-12">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable">
+              <thead class="bg-primary">
+              <tr class="text-center">
+                <th class="align-middle" style="width: 8%;"></th>
+                <th class="align-middle" style="width: 8%;">Kode QR</th>
+                <th class="align-middle" style="width: 24%;">Nama Barang</th>
+                <th class="align-middle" style="width: 24%;">Spesifikasi Barang</th>
+                <th class="align-middle" style="width: 7%;">Satuan</th>
+                <th class="align-middle" style="width: 6%;">Kode Proyek</th>
+                <th class="align-middle" style="width: 6%;">Nama Proyek</th>
+                <th class="align-middle" style="width: 7%;">Lokasi Gudang</th>
+                <th class="align-middle" style="width: 11%;">Jumlah Tersedia</th>
+                <th class="align-middle" style="width: 11%;">Jumlah Permintaan</th>
+                <th class="align-middle" style="width: 11%;">Jumlah Dikeluarkan</th>
+                <% if current_user.roles.any? { |r| r.name == "superadmin" || r.name == "User EPC" || r.name == "User OM" } %>
+              <th class="align-middle" style="width: 10%;">Aksi</th>
+              <% end %>
+              </tr>
+              </thead>
+              <% @project_items.each do |project_item| %>
+                <tbody>
+                <% item = Item.find_by(id: project_item.item)%>
+                <% measurement = Measurement.find_by(id: project_item.measurement_id) %>
+                <%# warehouse = Warehouse.find_by(id: project_item.warehouse) %>
+                <tr>
+                  <td class="align-middle"><input type="checkbox" class="form-check"></td>
+                  <td class="align-middle">07.01.025.050.1</td>
+                  <td class="align-middle"><%= item.try(:nama_barang) %></td>
+                  <td class="align-middle"><%= item.try(:spesifikasi_barang) %></td>
+                  <td class="align-middle"><%= measurement.try(:nama_satuan) %></td>
+                  <td class="align-middle">1000-133-16-1-01-020</td>
+                  <td class="jumlah_pesanan align-middle">Jasa Pengamanan Jaringan dan Fasilitasnya</td>
+                  <td class="align-middle">Pagar Dewa</td>
+                  <td class="align-middle"><%= project_item.jumlah_tersedia %></td>
+                  <td class="align-middle"><%= project_item.jumlah_permintaan %></td>
+                  <td class="harga_satuan align-middle"><%= project_item.jumlah_keluar %></td>
+                  <% if current_user.roles.any? { |r| r.name == "superadmin" || r.name == "User EPC" || r.name == "User OM" } %>
+
+                <td class="align-middle text-center">
+                    <%= link_to edit_project_item_path(project_item), class:"btn btn-success btn-sm rounded-circle text-white py-1 mb-1 px-2" do  %>
+                      <i class="fas fa-pencil-alt"></i>
+                    <% end %>
+                    <%#= link_to project_item, method: :delete, data:{ confirm: 'Apakah anda yakin ingin menghapus?'}, remote: true, class:"btn btn-danger btn-sm rounded-circle text-white py-1 mb-1 px-2" do %>
+<!--                      <i class="fas fa-trash-alt"></i>-->
+                    <%# end %>
+                  </td>
+                    <% end %>
+                </tr>
+              <% end %>
+              </tbody>
+            </table>
+          </div>
+          <% if current_user.roles.any? { |r| r.name == 'User EPC' || r.name == 'User OM' }  %>
+            <%= form_with(model: @project, local: true) do |form| %>
+              <% if @project.errors.any? %>
+                <div id="error_explanation">
+                  <h2><%= pluralize(project.errors.count, "error") %> prohibited this project from being saved:</h2>
+                  <ul>
+                    <% project.errors.full_messages.each do |message| %>
+                      <li><%= message %></li>
+                    <% end %>
+                  </ul>
+                </div>
+              <% end %>
+              <%= form.hidden_field :status_id, :value => 4, id: "status_id" %>
+              <br>
+              <%= link_to 'Back', projects_path, class:"btn btn-secondary text-white btn-custom rounded-pill" %>
+              <button class="btn btn-success btn-custom rounded-pill" type="submit">Submit</button>
+            <% end %>
+          <% elsif current_user.roles.any? { |r| r.name == 'Staff Gudang' } %>
+            <%= form_with(model: @project, local: true) do |form| %>
+              <% if @project.errors.any? %>
+                <div id="error_explanation">
+                  <h2><%= pluralize(project.errors.count, "error") %> prohibited this project from being saved:</h2>
+                  <ul>
+                    <% project.errors.full_messages.each do |message| %>
+                      <li><%= message %></li>
+                    <% end %>
+                  </ul>
+                </div>
+              <% end %>
+              <%= form.hidden_field :status_id, :value => 5, id: "statusa_id" %>
+              <br>
+              <%= link_to 'Back', projects_path, class:"btn btn-secondary text-white btn-custom rounded-pill" %>
+              <button class="btn btn-success btn-custom rounded-pill" type="submit">Submit</button>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+    </div>
+  </div>
+</div>
+
+<script>
+    function setKodeBarang(){
+        var aru_id = $(".namaBarang").val();
+        // console.log(aru_id)
+        $.getJSON("/receives/" +aru_id+ "/getSpesifikasiBarang",
+            function ( callback ) {
+                if (callback != "error"){
+                    console.log(callback)
+                    $("#spesifikasi-barang").val(callback);
+                }
+            });
+    }
+
+    function setNamaBarang(){
+        let project_item_id = $("#kode-barang").val();
+        $.getJSON("/project_items/" +project_item_id+ "/getNamaBarang",
+            function ( callback ) {
+                if (callback !== "error"){
+                    console.log(callback)
+                    $("#nama-barang").val(callback);
+                }
+            });
+    }
+
+
+    select_project()
+    function select_project() {
+        $('.selectProject').change(function(){
+            if ($(this).val() !== '') {
+                const e = JSON.parse($(this).val());
+                $('#projectCode').val(e.projectCode);
+                console.log(e)
+            }
+        });
+    }
+</script>

@@ -1,0 +1,51 @@
+<h1 class="my-5 text-center font-weight-bold text-primary">Input Lokasi Penempatan Barang</h1>
+
+<%= form_for :receive_process, url: receive_process_setLokasiPenempatan_path, method: :post, html: {class: "form-horizontal", role: "form"} do |form| %>
+    <div class="row mx-0 px-5">
+        <div class="container py-4 px-5">
+
+            <input type="hidden" name="receive_item_id" value="<%= params[:id]%>">
+
+            <div class="mb-3 row">
+                <%= form.label "Nama Barang", class: "col-sm-4 col-form-label" %>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" value="<%= @receive_items.item.nama_barang%>" readonly>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <%= form.label "Gudang Penempatan", class: "col-sm-4 col-form-label" %>
+                <div class="col-sm-8">
+                    <input type="text" id="gudang-penempatan" class="form-control" value="<%= @getGudang.warehouse.nama_gudang%>" readonly>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <%= form.label :rack_location, "Lokasi Penyimpanan Barang (Rack/Pallet/Stockyard dll)", class: "col-sm-4 col-form-label" %>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="lokasi_penempatan" required>
+                </div>
+            </div>
+            
+            <input type="hidden" class="form-control" name="receive_id" value="<%= @receive_items.receive_id %>" required>
+            <input type="hidden" class="form-control" name="warehouse_id" value="<%= @receive_items.receive.warehouse_id %>" required>
+
+            <div class="mb-6">
+                <div class="row">
+                    <div class="col-sm-4">
+                    </div>
+                    <div class="col-sm-4">
+                    </div>
+
+                    <div class="col-sm-12">
+                        <div class="mb-3 float-right">
+                            <button class="btn btn-primary text-white btn-custom rounded-pill" data-dismiss="modal">Simpan</button>
+                        </div>
+                        <button class="btn btn-secondary text-white btn-custom rounded-pill pull-left" data-dismiss="modal">Kembali</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<% end %>
+

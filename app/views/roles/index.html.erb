@@ -1,0 +1,56 @@
+<% unless notice.blank? %>
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  <strong id="notice"><%= notice %></strong>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<% end %>
+
+<h1 class="my-5 text-center font-weight-bolder text-primary">Data Role</h1>
+
+<div class="row px-3">
+  <div class="col-12 mt-3 d-flex justify-content-right">
+    <%= link_to new_role_path, class:"btn btn-primary btn-custom rounded-pill text" do %>
+      <i class="fas fa-plus"></i>
+      <span>Tambah Role</span>
+    <% end %>
+  </div>
+</div>
+
+<br>
+
+  <div class="row mx-0">
+    <div class="col-12">
+      <div class="table-responsive">
+          <table id="dataTable" class="table table-bordered">
+            <thead class="bg-primary">
+            <tr class="text-center">
+              <th style="width: 5%;"></th>
+              <th class="align-middle">Nama</th>
+              <th class="align-middle">Aksi</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% @roles.each_with_index do |role, index| %>
+              <tr>
+               <td class="align-middle text-center">
+                   <%= index+1 %>
+                    </td>
+                <td class="align-middle text-center"><%= role.name %></td>
+                <td class="align-middle text-center">
+                  <%= link_to edit_role_path(role),  class:"btn btn-success btn-sm rounded-circle text-white py-1 mb-1 px-2" do  %>
+                    <i class="fas fa-pencil-alt"></i>
+                  <% end %>
+                  <%= link_to role, method: :delete, class:"btn btn-danger btn-sm rounded-circle text-white py-1 mb-1 px-2",
+                              data: { confirm: 'Are you sure?' } do %>
+                    <i class="fas fa-trash"></i>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>

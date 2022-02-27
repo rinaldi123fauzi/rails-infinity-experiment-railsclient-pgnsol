@@ -1,0 +1,190 @@
+<h1 class="my-5 text-center text-primary font-weight-bolder">Input Data User</h1>
+
+
+  <div class="row mb-3">
+  <div class="col-12 justify-content-center">
+    <%= form_for @user, html: { class: 'form-horizontal' } do |f| %>
+      <fieldset>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Data Source</label>
+          <div class="col-sm-12">
+            <%= f.select :user_type, ["Manual", "LDAP"], { prompt: "Silahkan Dipilih" }, onchange: "changeDs($(this))", class: 'dtSource form-control' %>
+          </div>
+        </div>
+      </fieldset>
+      <fieldset class="ldap">
+        <div class="form-group">
+          <label class="col-sm-2 control-label">User LDAP</label>
+          <div class="col-sm-12">
+            <%
+              ldap = Net::LDAP.new :host => '192.168.60.159',
+                                   :port => 389,
+                                   :auth => {
+                                     :method => :simple,
+                                     :username => "cn=manager, dc=pgn-solution, dc=co, dc=id",
+                                     :password => "4lh4mdul1ll4h"
+                                   }
+
+              filter = Net::LDAP::Filter.eq("cn", "*")
+              treebase = "dc=pgn-solution, dc=co, dc=id"
+            %>
+            <select class="form-control selectpicker" name="username" id="dodol" data-live-search="true">
+              <%
+                ldap.search(:base => treebase, :filter => filter) do |entry|
+              %>
+                <% if params[:member_id].present?
+                     user = Member.find(params[:member_id])
+                     if user.username == entry["sn"].map(&:inspect).join(', ').gsub('"', '')
+                       selected = "selected"
+                     end
+                %>
+                  <option value="<%= "#{entry["sn"].map(&:inspect).join(', ').gsub('"', '')}" %>" <%= selected %>><%= "#{entry["sn"].map(&:inspect).join(', ').gsub('"', '')}" %></option>
+                <% else %>
+                  <option value="<%= "#{entry["sn"].map(&:inspect).join(', ').gsub('"', '')}" %>"><%= "#{entry["sn"].map(&:inspect).join(', ').gsub('"', '')}" %></option>
+                <% end %>
+              <% end %>
+            </select>
+          </div>
+        </div>
+      </fieldset>
+      <fieldset class="manual ldap">
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Nama</label>
+          <div class="col-sm-12">
+            <%= f.text_field :name, class: 'form-control' %>
+          </div>
+        </div>
+      </fieldset>
+      <fieldset class="manual">
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Username</label>
+          <div class="col-sm-12">
+            <%= f.text_field :username, class: 'form-control' %>
+          </div>
+        </div>
+      </fieldset>
+      <fieldset class="manual">
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Email</label>
+          <div class="col-sm-12">
+            <%= f.email_field :email, class: 'form-control' %>
+          </div>
+        </div>
+      </fieldset>
+      <fieldset class="manual">
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Password</label>
+          <div class="col-sm-12">
+            <%= f.password_field :password, class: 'form-control' %>
+          </div>
+        </div>
+      </fieldset>
+      <fieldset class="manual ldap">
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Divisi</label>
+          <div class="col-sm-12">
+            <%# if current_user.roles.any? { |r| r.name == "superadmin" } %>
+<!--              <input type="text" value="<%#= current_user.division_id.try(:nama_divisi) %>" readonly="" class="form-control">-->
+              <%#= f.hidden_field :division_id, class: 'form-control', value: current_user.division_id %>
+            <%# else %>
+              <%= f.collection_select :division_id, Division.all, :id, :nama_divisi, {prompt: "silahkan pilih divisi"}, class: 'form-control' %>
+            <%#= collection_select :receive, :warehouse_id, Warehouse.all, :id, :nama_gudang, {prompt: "pilih nama gudang"}, class: "form-control" %>
+
+            <%# end %>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="manual ldap">
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Role</label>
+          <div class="col-sm-10">
+              <%= f.collection_check_boxes :role_ids, Role.all, :id, :name do |m| %>
+                <%= m.label class: 'checkbox-inline' do %>
+                  <%= m.check_box class: 'checkbox-inline' %>
+                  <%= m.text %>
+                <% end %>
+              <% end %>
+          </div>
+          
+        </div>
+      </fieldset>
+
+      <fieldset class="manual ldap">
+        <div class="form-group">
+          <label class="col-sm-2 control-label" style="margin-right: 25px">Status</label>
+          <div class="col-sm-8">
+            <label class="checkbox c-checkbox c-checkbox-rounded">
+              <%= f.check_box :state, type: 'checkbox' %>
+              <span class="fa fa-check"></span>Set Aktif</label>
+          </div>
+        </div>
+      </fieldset>
+      <fieldset>
+        <div class="form-group">
+          <div class="col-sm-12 col-sm-offset-2 mb-3">
+            <%= link_to 'Kembali', users_path, class: 'btn btn-secondary pull-left btn-custom rounded-pill' %>
+            <button type="submit" class="btn btn-primary pull-right btn-custom rounded-pill">Simpan</button>
+          </div>
+        </div>
+     
+    <% end %>
+  </div>
+  </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('.manual').hide();
+        $('.ldap').hide();
+    });
+
+    jQuery(function() {
+        const area = $('#area').html();
+        console.log(area);
+
+        return $('#divisi').change(function() {
+            var divisi, options;
+            divisi = $('#divisi :selected').text();
+            options = $(area).filter('optgroup[label="' + divisi + '"]').html();
+            console.log(options);
+            if (options) {
+                return $('#area').html(options);
+            } else {
+                return $('#area').empty();
+            }
+        })
+    });
+
+    function changeDs(value) {
+        if (value.val() == "Manual") {
+            $('.ldap').hide();
+            $('.manual').show();
+            $('#users dodol').disabled = false;
+            $('#users username').required = true;
+            $('#users password').required = true;
+            $('#users email').required = true;
+        } else if (value.val() == "LDAP") {
+            $('.manual').hide();
+            $('.ldap').show();
+            $('#users dodol').disabled = true;
+            $('#users username').required = false;
+            $('#users password').required = false;
+            $('#users email').required = false;
+        } else {
+            $('.ldap').hide();
+            $('.manual').hide();
+            $('#users dodol').disabled = false;
+        }
+    }
+    $("#dodol").select2({
+        theme: "bootstrap"
+    });
+    $("#divisi").select2({
+        theme: "bootstrap"
+    });
+    $("#area").select2({
+        theme: "bootstrap"
+    });
+
+</script>

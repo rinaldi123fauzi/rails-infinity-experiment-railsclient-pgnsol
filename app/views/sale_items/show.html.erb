@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Jumlah keluar:</strong>
+  <%= @sale_item.jumlah_keluar %>
+</p>
+
+<p>
+  <strong>Item:</strong>
+  <%= @sale_item.item %>
+</p>
+
+<p>
+  <strong>Jumlah tersedia:</strong>
+  <%= @sale_item.jumlah_tersedia %>
+</p>
+
+<p>
+  <strong>Sale:</strong>
+  <%= @sale_item.sale %>
+</p>
+
+<%= link_to 'Edit', edit_sale_item_path(@sale_item) %> |
+<%= link_to 'Back', sale_items_path %>

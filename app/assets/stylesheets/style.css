@@ -1,0 +1,166 @@
+.login-bg {
+    /*height: 35rem;*/
+    background: rgb(0, 130, 227);
+    background: linear-gradient(
+            180deg,
+            rgba(0, 130, 227, 1) 0%,
+            rgba(43, 75, 156, 1) 50%,
+            rgba(0, 130, 227, 1) 100%
+    );
+    /*background-image: url("/img/wave.png");*/
+    font-family: "Poppins", sans-serif;
+    position: relative;
+}
+
+.pgn-logo-login {
+    width:15rem;
+    position:absolute;
+    top: 20px;
+}
+.pgn-logo-navbar {
+    width:15rem;
+    position:absolute;
+    top: 5px;
+}
+
+.wave-login {
+    width: 80%;
+    padding-top:40px;
+    margin-top:10px;
+    margin-left: -90px;
+    /*padding-right: 110px;*/
+    object-fit: cover;
+    z-index: -1;
+    position: static;
+}
+
+.navbar-bg {
+    /* height: 35rem; */
+    /* background: rgb(0,130,227); */
+    background: linear-gradient(
+            180deg,
+            rgba(0, 130, 227, 1) 0%,
+            rgba(43, 75, 156, 1) 50%,
+            rgba(0, 130, 227, 1) 100%
+    );
+    font-family: "Poppins", sans-serif;
+}
+
+
+* {
+    box-sizing: border-box;
+}
+
+.form-box {
+    background-color: rgba(255, 255, 255, 0.123);
+    margin: auto auto;
+    padding: 40px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px #ffffff;
+    position: inherit;
+    top: 30px;
+    bottom: 60px;
+    left: 50em;
+    right: 0;
+    width: 380px;
+    height: inherit;
+}
+.form-box:before {
+    /* background-image: url("https://i.postimg.cc/8cnYLpfc/ddddd.jpg"); */
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    content: "";
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: -1;
+    display: block;
+    filter: blur(2px);
+}
+.form-box .header-text {
+    padding-bottom: 30px;
+    text-align: center;
+}
+
+.form-box input {
+    margin: 10px 0px;
+    border: none;
+    padding: 10px;
+    border-radius: 15px;
+    width: 100%;
+    font-size: 18px;
+}
+
+.form-box label {
+    position: relative;
+    margin-left: 5px;
+    margin-right: 10px;
+    top: 5px;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+.form-box label:before {
+    content: "";
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    position: absolute;
+    left: 0;
+    bottom: 1px;
+    background-color: #ddd;
+}
+.form-box input[type="checkbox"]:checked + label:before {
+    content: "\2713";
+    font-size: 20px;
+    color: #ffffff;
+    text-align: center;
+    line-height: 20px;
+}
+.form-box span {
+    font-size: 14px;
+}
+.form-box button {
+    background: linear-gradient(
+            180deg,
+            rgb(25, 156, 255) 0%,
+            rgba(0, 130, 227, 1) 50%,
+            rgb(25, 156, 255) 100%
+    );
+    color: #fff;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    width: 40%;
+    font-size: 18px;
+    padding: 10px;
+    margin: 20px 0px;
+    display: inline-block;
+    text-align: center;
+}
+
+
+.input-icons i {
+    position: absolute;
+}
+
+.input-icons {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.icon {
+    padding: 10px;
+    min-width: 40px;
+}
+
+.input-field {
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+}

@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Project Items</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Jenis kode biaya</th>
+      <th>Kode proyek</th>
+      <th>Nama proyek</th>
+      <th>Item</th>
+      <th>Measurement</th>
+      <th>Jumlah tersedia</th>
+      <th>Jumlah keluar</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @project_items.each do |project_item| %>
+      <tr>
+        <td><%= project_item.jenis_kode_biaya %></td>
+        <td><%= project_item.kode_proyek %></td>
+        <td><%= project_item.nama_proyek %></td>
+        <td><%= project_item.item %></td>
+        <td><%= project_item.measurement %></td>
+        <td><%= project_item.jumlah_tersedia %></td>
+        <td><%= project_item.jumlah_keluar %></td>
+        <td><%= link_to 'Show', project_item %></td>
+        <td><%= link_to 'Edit', edit_project_item_path(project_item) %></td>
+        <td><%= link_to 'Destroy', project_item, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Project Item', new_project_item_path %>

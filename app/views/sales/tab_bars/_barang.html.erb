@@ -1,0 +1,245 @@
+<div class="tab-pane fade" id="sale-item" role="tabpanel" aria-labelledby="sale-item-tab">
+    <% if current_user.roles.any? { |r| r.name == 'User Trading'} %>
+            <button type="button" class="btn btn-primary btn-custom rounded-pill text" style="margin-left: 20px;" data-toggle="modal" data-target="#tambahBarang">
+                <i id="my-icon" class="fas fa-plus"></i>
+                Tambah Barang
+            </button>
+    <% end %>
+    <br>
+    <br>
+    <%= form_for :sale_process, url: sale_process_tambahBarang_path, method: 'POST' do |form| %>
+        <div class="modal fade" id="tambahBarang" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header justify-content-md-center bg-gradient-primary text-center">
+                    <h5 class="modal-title w-100 text-white" id="editItemMaterialModalLabel">Input Barang</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body" id="modal_body">
+
+                    <style>
+                        .select2 {
+                        width: 100% !important;
+                        }
+                    </style>
+
+                    <% 
+                        @filterBarang = ReceiveItem.where(receive_id: @sale.receive_id).select('*') 
+                        f = []
+                        @filterBarang.each do |item|
+                            f[item.item_id.to_i] = item.item_id
+                        end    
+                    %>
+
+                    <div class="mb-3 row">
+                        <label class="col-sm-4 col-form-label">Nama Barang</label>
+                        <div class="col-sm-8">
+                            <%= form.collection_select :item_id, Item.where('id IN (?)', f), :id, :searchItem, {prompt: "pilih nama barang"}, class: "form-control", id:"nama-barang", onclick: "namaBarang()", required: true %>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label class="col-sm-4 col-form-label">Kode QR</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="qrcode" readonly>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label class="col-sm-4 col-form-label">Satuan</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="satuan" readonly>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label class="col-sm-4 col-form-label">Lokasi Penempatan</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="lokasi-penempatan" readonly>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label class="col-sm-4 col-form-label">Lokasi Gudang</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="lokasi-gudang" readonly>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label class="col-sm-4 col-form-label">Jumlah Tersedia</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="jumlah-diterima" readonly>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label class="col-sm-4 col-form-label">Jumlah Dikeluarkan</label>
+                        <div class="col-sm-8">
+                            <input type="number" name="jumlah_dikeluarkan" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="id_receive_item" id="id-receive-item">
+                    <input type="hidden" name="id_measurement" id="id-measurement">
+                    <input type="hidden" name="id_warehouse" id="id-warehouse">
+                    <input type="hidden" name="id_sale" value="<%= params[:id]%>">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary text-white btn-custom rounded-pill" type="submit">Simpan</button>
+                    </div>
+                </div>
+            </div>
+        </div>     
+    <% end %>
+
+    <div class="row mx-0">
+        <div class="col-12">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable">
+                    <thead class="bg-primary">
+                        <tr class="text-center">
+                            <th class="align-middle">Kode QR</th>
+                            <th class="align-middle" style="width: 24%;">Nama Barang</th>
+                            <th class="align-middle" style="width: 7%;">Satuan</th>
+                            <th class="align-middle" style="width: 11%;">Lokasi Penempatan</th>
+                            <th class="align-middle" style="width: 11%;">Lokasi Gudang</th>
+                            <th class="align-middle" style="width: 11%;">Jumlah Tersedia</th>
+                            <th class="align-middle" style="width: 11%;">Jumlah Permintaan</th>
+
+                            <% unless current_user.roles.any? { |r| r.name == 'User Trading' } %>
+                            <th class="align-middle" style="width: 11%;">Jumlah Dikeluarkan</th>
+                            <% end %>
+                            <% if current_user.roles.any? { |r| r.name == 'superadmin' || r.name == 'Staff Gudang' || r.name == 'User Trading' } %>
+                                <th class="align-middle" style="width: 10%;">Aksi</th>
+                            <% end %>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <% @sale_items.each do |sale_item| %>
+                            <tr>
+                                <td class="align-middle"><%= sale_item.receive_item.qr_code %></td>
+                                <td class="align-middle">
+                                    <%= getDetailItemFromReceiveItem(sale_item.receive_item_id) %>
+                                <td class="align-middle"><%= sale_item.measurement.try(:nama_satuan) %></td>
+                                <td class="align-middle">
+                                    <%= sale_item.receive_item.lokasi_penempatan %>
+                                </td>
+                                <td class="align-middle">
+                                    <%# unless ReceiveLocation.find_by_receive_item_id(receive_item.id).nil? %>
+                                    <%# @getLocation = ReceiveLocation.find_by_receive_item_id(receive_item.id) %>
+                                    <%#= @getLocation.try(:warehouse_id)%>
+                                    <%# end %>
+                                    <%= sale_item.warehouse.try(:nama_gudang) %>
+                                </td>
+                                <td class="align-middle"><%= sale_item.receive_item.jumlah_terima %></td>
+                                <td class="align-middle"><%= sale_item.jumlah_permintaan %></td>
+                                <% unless current_user.roles.any? { |r| r.name == 'User Trading' } %>
+                                    <td class="align-middle"><%= sale_item.try(:jumlah_keluar) %></td>
+                                <% end %>
+
+                                <% if current_user.roles.any? { |r| r.name.match(/(User Trading|Staff Gudang)/) } %>
+                                    <td class="align-middle text-center">
+                                        <% if current_user.roles.any? { |r| r.name.match(/^User Trading$/) } %>
+                                            <%= link_to editSaleItem_path(sale_item), class:" edit-sale-item btn btn-warning btn-sm rounded-circle text-white py-1 mb-1 px-2" do  %>
+                                                <i class="fas fa-pencil-alt"></i>
+                                            <% end %>
+                                        <% elsif current_user.roles.any? { |r| r.name.match(/^Staff Gudang$/) } %>
+                                            <%= link_to editJumlahDikeluarkan_path(sale_item), class:" edit-sale-item btn btn-warning btn-sm rounded-circle text-white py-1 mb-1 px-2" do  %>
+                                                <i class="fas fa-pencil-alt"></i>
+                                            <% end %>
+                                        <% end %>
+                                    </td>
+                                <% end %>
+                            </tr>
+                        <% end %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $('#nama-barang').select2({
+        dropdownParent: $('#modal_body')
+    });
+
+    namaBarang();
+    function namaBarang() {
+        $('#nama-barang').change(function(){
+            if ($(this).val() !== '') {
+                var id = $(this).val();
+                $.getJSON("/sales/" +id+ "/getDetailReceiveItem",
+                function ( callback ) {
+                    if (callback != "error"){
+                    // console.log(callback)
+                    for (var i = 0; i < callback.length; i++){
+                        var obj = callback[i];
+                        if (obj == null){
+                            $("#qrcode").empty();
+                            $("#satuan").empty();
+                            $("#lokasi-penempatan").empty();
+                            $("#lokasi-gudang").empty();
+                            $("#jumlah-diterima").empty();
+                            $("#id-receive-item").empty();
+                            $("#id-measurement").empty();
+                            $("#id-warehouse").empty();
+                        } else{
+                            $("#id-receive-item").empty();
+                            var idreceiveitem = obj['idreceiveitem']
+                                // ...use `element`...
+                            $("#id-receive-item").val(idreceiveitem);
+                            
+                            $("#id-measurement").empty();
+                            var idmeasurement = obj['idmeasurement']
+                                // ...use `element`...
+                            $("#id-measurement").val(idmeasurement);
+
+
+                            $("#id-warehouse").empty();
+                            var idwarehouse = obj['idwarehouse']
+                                // ...use `element`...
+                            $("#id-warehouse").val(idwarehouse);
+
+                            $("#qrcode").empty();
+                            var qrcode = obj['qrcode']
+                                // ...use `element`...
+                            $("#qrcode").val(qrcode);
+
+                            $("#satuan").empty();
+                            var satuan = obj['satuan']
+                                // ...use `element`...
+                            $("#satuan").val(satuan);
+
+                            $("#lokasi-penempatan").empty();
+                            var lokasipenempatan = obj['lokasipenempatan']
+                                // ...use `element`...
+                            $("#lokasi-penempatan").val(lokasipenempatan);
+
+                            $("#lokasi-gudang").empty();
+                            var lokasigudang = obj['lokasigudang']
+                                // ...use `element`...
+                            $("#lokasi-gudang").val(lokasigudang);
+
+                            $("#jumlah-diterima").empty();
+                            var jumlahtersedia = obj['jumlahtersedia']
+                                // ...use `element`...
+                            $("#jumlah-diterima").val(jumlahtersedia);
+
+                            // $("#harga-ex-ppn").empty();
+                            // $("#real-harga-ex-ppn").empty();
+                            // var harga_ex_ppn = obj['jumlahharga']
+                            //     // ...use `element`...
+                            // $("#real-harga-ex-ppn").val(harga_ex_ppn);
+                            // $('#harga-ex-ppn').val(rupiah_formater($("#real-harga-ex-ppn").val(), 'Rp. '));
+                        }
+                    }
+                    }
+                });
+            }
+        });
+    }
+</script>

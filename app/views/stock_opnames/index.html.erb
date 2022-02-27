@@ -1,0 +1,115 @@
+<% unless notice.blank? %>
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong id="notice"><%= notice %></strong>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+<% end %>
+
+<h1 class="my-5 text-center">Stock Opname</h1>
+
+
+<div class="col-md-6">
+  <div class="ibox float-e-margins">
+    <div class="ibox-content">
+      <%= form_for(stock_opnames_url, method: :get, html: {id: "review-form", class: "form-horizontal animated fadeInRight", role: "form"}) do |f| %>
+        <fieldset>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label class="col-sm-6">Lokasi Gudang</label>
+                <div class="col-sm-12">
+                  <div class='input-group date' id='datetimepicker1'>
+                    <span class="input-group-addon">
+                      <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                      <input type='text' name="lokasi_gudang" class="form-control"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label class="col-sm-6">Periode Laporan</label>
+                <div class="col-sm-12">
+                      <%= f.date_field :periode_laporan, class: "form-control" %>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label class="col-sm-12">Periode Stock Opname</label>
+                <div class="col-sm-12">
+                      <%= f.date_field :periode_stock, class: "form-control" %>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label class="col-sm-12"></label>
+                <div class="col-sm-12">
+                  <%= f.submit 'Set', class: "btn btn-primary" %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="col-sm-3">
+  <%= link_to new_stock_opname_path, class:"btn btn-primary btn-custom rounded-pill text" do %>
+    <span>Scan QR Code</span>
+  <% end %>
+</div>
+<br>
+<div class="row mx-0 px-5">
+  <div class="table-responsive">
+    <table class="table table-bordered" id="dataTable">
+      <thead class="bg-primary">
+      <tr class="text-center">
+        <th>Kode qr code</th>
+        <th>Tanggal</th>
+        <th>Jumlah tersedia</th>
+        <th>Lokasi penempatan</th>
+        <th>Jumlah fisik</th>
+        <th>Selisih</th>
+        <th>Keterangan</th>
+        <th>Warehouse</th>
+        <th>Aksi</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <% @stock_opnames.each do |stock_opname| %>
+        <tr>
+          <td><%= stock_opname.qr_code %></td>
+<!--          <td><%#= stock_opname.created_at %></td>-->
+          <td><%= stock_opname.jumlah_terima %></td>
+          
+          <td>
+            <%= link_to stock_opname,  class:"btn btn-warning btn-sm rounded-circle text-white py-1 mb-1 px-2" do  %>
+              <i class="fas fa-eye"></i>
+            <% end %>
+            <%= link_to edit_stock_opname_path(stock_opname),  class:"btn btn-success btn-sm rounded-circle text-white py-1 mb-1 px-2" do  %>
+              <i class="fas fa-pencil-alt"></i>
+            <% end %>
+            <%= link_to stock_opname, method: :delete, class:"btn btn-danger btn-sm rounded-circle text-white py-1 mb-1 px-2", data: { confirm: 'Are you sure?' } do %>
+              <i class="fas fa-trash"></i>
+            <% end %>
+            <%= link_to stock_opname, method: :delete, class:"btn btn-dark btn-sm rounded-circle text-white py-1 mb-1 px-2", data: { confirm: 'Are you sure?' } do %>
+              <i class="fas fa-download"></i>
+            <% end %>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

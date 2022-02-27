@@ -1,0 +1,438 @@
+<% unless notice.blank? %>
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  <strong id="notice"><%= notice %></strong>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<% end %>
+<h1 class="my-5 text-center">Penerimaan Material</h1>
+        <div class="row mx-5 mb-3">
+          <div class="col-12">
+            <div class="navbar navbar-expand-sm menu-bar">
+              <ul class="nav navbar-nav border-bottom border-top w-100">
+                <li class="nav-item active">
+                  <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Data</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="barang-tab" data-toggle="tab" href="#barang" role="tab" aria-controls="barang" aria-selected="true">Barang</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="barang-tab" data-toggle="tab" href="#detail_status" role="tab" aria-controls="detail_status" aria-selected="true">Detail Status</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <div class="row px-5">
+              <div class="col mx-3 mt-4 d-flex justify-content-center" style="overflow-y:auto">
+                <div style="height: 320px;">
+                  <table class="data-overview">
+                    <tr>
+                      <td class="title">Kode Transaksi Penerimaan</td>
+                      <td class="text"><%= @setStatusBaca.receive.try(:kode_transaksi_penerimaan)%></td>
+                    </tr>
+                    <tr>
+                      <td class="title">Tanggal Transaksi</td>
+                      <td class="text"><%= "#{@setStatusBaca.receive.created_at.strftime('%d')} #{get_month_name(@setStatusBaca.receive.created_at.strftime('%-m'))} #{@setStatusBaca.receive.created_at.strftime('%Y')}"%></td>
+                    </tr>
+                    <tr>
+                      <td class="title">Jenis Penerimaan</td>
+                      <td class="text"><%= @setStatusBaca.receive.try(:jenis)%></td>
+                    </tr>
+                    <tr>
+                      <td class="title">Judul BAST/DO</td>
+                      <td class="text"><%= @setStatusBaca.receive.try(:judul_bast)%></td>
+                    </tr>
+                    <tr>
+                      <td class="title">Nomor BAST/DO</td>
+                      <td class="text"><%= @setStatusBaca.receive.try(:nomor_bast)%></td>
+                    </tr>
+                    <tr>
+                      <td class="title">Tanggal BAST/DO</td>
+                      <td class="text"><%= "#{@setStatusBaca.receive.tanggal_bast.strftime('%d')} #{get_month_name(@setStatusBaca.receive.tanggal_bast.strftime('%-m'))} #{@setStatusBaca.receive.tanggal_bast.strftime('%Y')}"%></td>
+                    </tr>
+                    <tr>
+                      <td class="title">Jumlah Harga BAST/DO (ex-ppn)</td>
+                      <td class="text"><%= number_to_currency(@setStatusBaca.receive.try(:jumlah_harga_bast), unit: "Rp. ", separator: ",", delimiter: ".")%></td>
+                    </tr>
+                    <tr>
+                      <td class="title">Nama Penyedia Material</td>
+                      <td class="text"><%= @setStatusBaca.receive.try(:nama_penyedia)%></td>
+                    </tr>
+                    <tr>
+                      <td class="title">Nomor PO</td>
+                      <td class="text"><%= @setStatusBaca.receive.try(:nomor_po)%></td>
+                    </tr>
+                    <tr>
+                      <td class="title">Tanggal PO</td>
+                      <td class="text"><%= "#{@setStatusBaca.receive.tanggal_po.strftime('%d')} #{get_month_name(@setStatusBaca.receive.tanggal_po.strftime('%-m'))} #{@setStatusBaca.receive.tanggal_po.strftime('%Y')}"%></td>
+                    </tr>
+                    <tr>
+                      <td class="title">Kode Proyek</td>
+                      <td class="text"><%= @setStatusBaca.receive.try(:kode_proyek)%></td>
+                    </tr>
+                    <tr>
+                      <td class="title">Gudang Penerimaan</td>
+                      <td class="text"><%= @setStatusBaca.receive.warehouse.try(:nama_gudang)%></td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <% 
+              @role = current_user.roles.any? { |r| r.id == 2}
+            %>
+            <% unless @role == false %>
+              <% getEdit = ReceiveHistory.find_by_id_and_role_id(params[:id], 2)%>
+              <% if getEdit.present? %>
+                <div class="col mx-3 mt-4 d-flex justify-content-center" style="overflow-y:auto">
+                  <%= link_to edit_receife_path(getEdit.receive_id),  class:"btn btn-success btn-sm rounded-circle text-white py-1 mb-1 px-2" do  %>
+                    <i class="fas fa-pencil-alt"></i>
+                  <% end %>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+          <div class="tab-pane fade" id="barang" role="tabpanel" aria-labelledby="barang-tab">
+            <%= form_for :receive_process, url: receive_process_printQRCode_path(format: :pdf), method: :post, html: {class: "form-horizontal", role: "form"} do |f|%>
+
+              <% if current_user.roles.any? { |r| r.name == 'Staff Gudang'} %>
+              <div class="d-grid gap-2 d-md-flex px-5 mx-5 mb-4 justify-content-md-end">
+                <button type="submit" class="btn btn-primary btn-custom rounded-pill"><i class='fas fa-qrcode'></i> Print QR Code</button>
+              </div>
+              <% end %>
+
+              <div class="row px-5">
+                <div class="col mx-3 mt-4 d-flex justify-content-center" style="overflow-y:auto">
+                  <div style="height: 320px; width: 1500px;">
+                    <table class="table table-bordered" id="dataTable">
+                      <thead class="bg-primary">
+                        <tr class="text-center">
+                          <% if current_user.roles.any? { |r| r.name == 'Staff Gudang'} %>
+                            <th></th>
+                          <% end %>
+                          <th class="align-middle" style="width: 8%;">Kode QR</th>
+                    <th class="align-middle" style="width: 24%;">Nama Barang</th>
+                    <th class="align-middle" style="width: 6%;">Jumlah Pesanan</th>
+                    <th class="align-middle" style="width: 6%;">Jumlah Terima</th>
+                    <th class="align-middle" style="width: 7%;">Satuan</th>
+                    <% unless current_user.roles.any? { |r| r.name == 'Staff Gudang' || r.name == 'Kepala Gudang'} %>
+                      <th class="align-middle" style="width: 11%;">Harga Satuan</th>
+                      <th class="align-middle" style="width: 13%;">Jumlah Harga (ex ppn)</th>
+                    <% end %>
+                    <th class="align-middle" style="width: 13%;">Lokasi Penempatan</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <input type="hidden" value="<%= params[:id] %>" name="id_ReceiveHistory">
+                      <tbody>
+                        <% @getRecieveItem.each do |receive_item| %>
+                            <tr>
+                              <% if current_user.roles.any? { |r| r.name == 'Staff Gudang'} %>
+                                <td>
+                                  <input type="checkbox" name="id_receiveItem[]" value="<%= receive_item.id %>">
+                                </td>
+                              <% end %>
+                              <td class="align-middle"><%= receive_item.try(:qr_code) %></td>
+                              <td class="align-middle">
+                                <%= receive_item.item.try(:nama_barang) %> <br>
+                                <%= receive_item.item.try(:ukuran) %> <br>
+                                <%= receive_item.item.try(:tipe) %> <br> 
+                                <%= receive_item.item.try(:merek) %> <br>  
+                                <%= receive_item.item.try(:serial) %> <br> 
+                                <%= receive_item.item.try(:lain) %> <br> 
+                              </td>
+                              <td class="align-middle"><%= receive_item.jumlah_pesanan %></td>
+                              <td class="jumlah_pesanan align-middle"><%= receive_item.jumlah_terima %></td>
+                              <td class="align-middle"><%= receive_item.measurement.try(:nama_satuan) %></td>
+                              <% unless current_user.roles.any? { |r| r.name == 'Staff Gudang' || r.name == 'Kepala Gudang'} %>
+                                <td class="harga_satuan align-middle"><%= number_to_currency(receive_item.harga_satuan, unit: "Rp. ", separator: ",", delimiter: ".") %></td>
+                                <td class="jumlah_harga align-middle"><%= number_to_currency(receive_item.jumlah_harga, unit: "Rp. ", separator: ",", delimiter: ".") %></td>
+                              <% end %>
+                              <td>
+                                  <% unless ReceiveLocation.find_by_receive_item_id(receive_item.id).nil? %>
+                                    <% @getLocation = ReceiveLocation.find_by_receive_item_id(receive_item.id) %>
+                                    <%= @getLocation.try(:rack_location)%>
+                                  <% end %>
+                              </td>
+                              <td>
+                                <% unless current_user.roles.any? { |r| r.name != 'Staff Gudang'}%>
+                                  <% @checkReceiveLocation = ReceiveLocation.find_by_receive_item_id(receive_item) %>
+                                  <% unless @checkReceiveLocation.present?%>
+                                    <%= link_to inputRack_path(id: receive_item, penerimaan_approval_id: params[:id]), class:"btn btn-success btn-sm rounded-circle text-white py-1 mb-1 px-2" do  %>
+                                      <i class="fas fa-pencil-alt"></i>
+                                    <% end %>
+                                  <% else %>
+                                    <%= link_to editRack_path(id: receive_item, penerimaan_approval_id: params[:id]), class:"btn btn-success btn-sm rounded-circle text-white py-1 mb-1 px-2" do  %>
+                                      <i class="fas fa-pencil-alt"></i>
+                                    <% end %>
+                                  <% end %>
+                                <% end %>
+                              </td>
+                            </tr>
+                          <% end %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+
+
+          <div class="tab-pane fade" id="detail_status" role="tabpanel" aria-labelledby="detail_status-tab">
+            <div class="row px-5">
+              <div class="col mx-3 mt-4 d-flex justify-content-center" style="overflow-y:auto">
+                <div style="height: 420px; width: 1500px;">
+                    <div class="row px-5">
+                      <div class="col mx-3 mt-4 d-flex justify-content-center" style="overflow-y:auto">
+                        <div style="height: 320px; width: 1500px;">
+                          <table class="table table-bordered" id="datatable-history">
+                            <thead class="bg-primary">
+                              <tr class="text-center">
+                                <th class="align-middle" style="width: 8%;">Tanggal Transaksi</th>
+                                <th class="align-middle" style="width: 24%;">Catatan</th>
+                                <th class="align-middle" style="width: 6%;">Status</th>
+                                <th class="align-middle" style="width: 6%;">Ditujukan</th>
+                                <th class="align-middle" style="width: 6%;">Keterangan</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <% getReceive = ReceiveHistory.find(params[:id]) %>
+                              <% ReceiveHistory.where(receive_id: getReceive.receive_id).order(:created_at => :desc).each do |history|%>
+                                <tr>
+                                  <td class="align-middle"><%= "#{history.created_at.strftime('%d')} #{get_month_name(history.created_at.strftime('%-m'))} #{history.created_at.strftime('%Y')}"%></td>
+                                  <td class="align-middle"><%= history.catatan_penerimaan %></td>
+                                  <td class="align-middle"><%= history.status.nama_status %></td>
+                                  <td class="align-middle"><%= history.role.name %></td>
+                                  <% if history.role_id == 3%>
+                                    <td class="align-middle"><%= history.catatan_penerimaan %></td>
+                                  <% else %>
+                                    <td class="align-middle"><%= history.status_approval %></td>
+                                  <% end %>
+                                </tr>
+                              <% end %>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <% unless current_user.roles.any? { |r| r.name != 'Staff Gudang'}%>
+          <% @getStatus = ReceiveHistory.find(params[:id]) %>
+          <% if @getStatus.receive.status_id == 7 || @getStatus.receive.status_id == 11%>
+            <%= form_for :receive_process, url: receive_process_sendStaffGudang_path, method: :post, html: {class: "form-horizontal", role: "form", :id => "formvalidate"} do |f|%>
+              <div class="row px-5 g-2 mx-5 mb-2" id="riwayat-permintaan">
+                <input type="hidden" value="<%= params[:id] %>" name="id_ReceiveHistory">
+              </div>
+              <div class="d-grid gap-2 d-md-flex px-5 mx-5 mb-4 justify-content-md-end">
+                <input type="submit" class="btn btn-success btn-custom rounded-pill" value="Kirim ke Ka.Gudang">
+              </div>
+            <% end %>
+          <% end %>
+        <% end %>
+
+        <%# <% unless @setStatusBaca.status_approval == "rejected" %>
+          <%# <% if @setStatusBaca.status_approval.nil?%>
+            <% unless current_user.roles.any? { |r| r.name == 'Staff Gudang' || r.name == 'Kepala Gudang' || r.name == 'Admin Persediaan'}%>
+              <% unless current_user.roles.any? { |r| r.name == 'superadmin'} %>
+                <div class="row mb-3 px-2">
+                  <div class="col p-2 pl-4 bg-gradient-primary text-white">
+                    <h5>Status Penerimaan Material</h5>
+                  </div>
+                </div>
+
+                <%= form_for :receive_process, url: receive_process_setStatus_path, method: :post, html: {class: "form-horizontal", role: "form", :id => "formvalidate"} do |f|%>
+                  <div class="row px-5 g-2 mx-5 mb-2" id="riwayat-permintaan">
+                    <% unless @setStatusBaca.present? %>
+                        <div class="col-2">
+                          Catatan :
+                        </div>
+                        <input type="hidden" name="receive_id" value="<%= @setStatusBaca.receive_id %>">
+                        <div class="col-10">
+                          <textarea class="form-control" name="catatan_penerimaan" rows="4"></textarea>
+                        </div>
+                          
+                        <div class="col-2 mb-2 my-3">
+                          Status :
+                        </div>
+                        <div class="col-sm-10">
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="rejected">
+                            <label class="form-check-label" for="gridRadios1">
+                              Rejected
+                            </label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="approved">
+                            <label class="form-check-label" for="gridRadios2">
+                              Approved
+                          </label>
+                        </div>
+                    <% else %>
+                      <div class="col-2">
+                        Catatan :
+                      </div>
+                      <input type="hidden" name="receive_id" value="<%= @setStatusBaca.receive_id %>">
+                      <div class="col-10">
+                        <textarea class="form-control" name="catatan_penerimaan" rows="4" required><%= @setStatusBaca.try(:catatan_penerimaan) %></textarea>
+                      </div>
+                        
+                      <div class="col-2 mb-2 my-3">
+                        Status :
+                      </div>
+                      <div class="col-10 my-3">
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="status" id="status-validate" value="rejected">
+                          <label class="form-check-label">
+                            Rejected
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="status" id="status-validate" value="approved">
+                          <label class="form-check-label">
+                            Approved
+                          </label>
+                        </div>
+                      </div>
+                    <% end %>
+                  </div>
+                  <div class="d-grid gap-2 d-md-flex px-5 mx-5 mb-4 justify-content-md-end">
+                    <input type="submit" class="btn btn-success btn-custom rounded-pill" value="Submit">
+                  </div>
+                <% end %>
+              <% end %>
+            <% end %>
+
+            <% if current_user.roles.any? { |r| r.name == 'Kepala Gudang'} %>
+                <div class="row px-5 g-2 mx-5 mb-2">
+                  <div class="col-10 my-3">
+                    <input type="radio" value="revisi" name="pilih_status">
+                    <label>Revisi</label>
+                    <input type="radio" value="posting" name="pilih_status">
+                    <label> Posting</label>
+                  </div>
+                </div>
+                
+                <div class="posting">
+                  <%= form_for :receive_process, url: receive_process_setPosting_path, method: :post, html: {class: "form-horizontal", role: "form", :id => "formvalidate"} do |f|%>
+                    <input type="hidden" name="kategori" value="posting">
+                    <div class="row px-5 g-2 mx-5 mb-2" id="riwayat-permintaan">
+                      <input type="hidden" name="receive_id" value="<%= @setStatusBaca.receive_id %>">
+                      <input type="hidden" value="9" name="status">
+                      <input type="hidden" value="approved" name="status_approval">
+                    </div>
+                    <div class="d-grid gap-2 d-md-flex px-5 mx-5 mb-4 justify-content-md-end">
+                      <input type="submit" class="btn btn-success btn-custom rounded-pill" value="Posting">
+                    </div>
+                  <% end %>
+                </div>
+
+                <div class="revisi">
+                  <%= form_for :receive_process, url: receive_process_setPosting_path, method: :post, html: {class: "form-horizontal", role: "form", :id => "formvalidate"} do |f|%>
+                    <input type="hidden" name="kategori" value="revisi">
+                    <input type="hidden" name="receive_id" value="<%= @setStatusBaca.receive_id %>">
+                    <input type="hidden" value="revisi" name="status_approval">
+                    <input type="hidden" value="<%= params[:id]%>" name="penerimaan_approval_id">
+                    <div class="row px-5 g-2 mx-5 mb-2" id="riwayat-permintaan">
+                      <div class="col-2">
+                          Catatan :
+                      </div>
+                      <input type="hidden" name="receive_id" value="<%= @setStatusBaca.receive_id %>">
+                      <div class="col-10">
+                        <textarea class="form-control" name="catatan_penerimaan" rows="4" required></textarea>
+                      </div>
+
+                      <div class="col-2">
+                          Kirim :
+                      </div>
+                      <div class="col-10">
+                        
+                          <input type="radio" id="status-validate" value="4" name="role">
+                          <label for="staff-gudang">Staff Gudang</label>
+                          <input type="radio" id="status-validate" value="2" name="role">
+                          <label for="admin-persediaan"> Admin Persediaan</label>
+
+                      </div>
+                    </div>
+                    <div class="d-grid gap-2 d-md-flex px-5 mx-5 mb-4 justify-content-md-end">
+                      <input type="submit" class="btn btn-success btn-custom rounded-pill" value="Kirim">
+                    </div>
+                  <% end %>
+                </div>
+              
+            <% end %>
+
+          <%# <% end %>
+        <%# <% end %>
+
+        <script type="text/javascript">
+        $('#datatable-history').dataTable();
+          $(document).ready(function () {
+            $("input[name='pilih_status']").click(function() {
+                var value = $(this).val();
+                if (value == "revisi"){
+                  $('div.revisi').show();
+                  $('div.posting').hide();
+                }else{
+                  $('div.revisi').hide();
+                  $('div.posting').show();
+                }
+            });
+
+            $('.revisi').hide();
+            $('.posting').hide();
+
+            
+          })
+          
+          $('#formvalidate').submit(function (e, params) {
+              var localParams = params || {};
+
+              if (!localParams.send) {
+                  e.preventDefault();
+              }
+
+                 //additional input validations can be done hear
+
+          swal({
+                      title: "Confirm Entry",
+                      text: "Are you sure all entries are correct",
+                      type: "warning",
+                      showCancelButton: true,
+                      confirmButtonColor: "#6A9944",
+                      confirmButtonText: "Confirm",
+                      cancelButtonText: "Cancel",
+                      closeOnConfirm: true
+                  }, function (isConfirm) {
+                      if (isConfirm) {
+                          $(e.currentTarget).trigger(e.type, { 'send': true });
+                      } else {
+
+                    //additional run on cancel  functions can be done hear
+
+                  }
+              });
+          });
+          $(document).ready(function() {
+              $('li').click(function() {
+                  $('li.nav-item.active').removeClass("active");
+                  $(this).addClass("active");
+              });
+          });
+
+          $(document).ready(function () {
+            document.getElementById("status-validate").required = true;
+          })
+  </script>
+

@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+
+<p>
+  <strong>Kode proyek:</strong>
+  <%= @project_item.kode_proyek %>
+</p>
+
+<p>
+  <strong>Nama proyek:</strong>
+  <%= @project_item.nama_proyek %>
+</p>
+
+<p>
+  <strong>Item:</strong>
+  <%= @project_item.item %>
+</p>
+
+<p>
+  <strong>Measurement:</strong>
+  <%= @project_item.measurement %>
+</p>
+
+<p>
+  <strong>Jumlah tersedia:</strong>
+  <%= @project_item.jumlah_tersedia %>
+</p>
+
+<p>
+  <strong>Jumlah keluar:</strong>
+  <%= @project_item.jumlah_keluar %>
+</p>
+
+<%= link_to 'Edit', edit_project_item_path(@project_item) %> |
+<%= link_to 'Back', project_items_path %>

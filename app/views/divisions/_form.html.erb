@@ -1,0 +1,32 @@
+<%= form_with(model: division, local: true) do |form| %>
+  <% if division.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(division.errors.count, "error") %> prohibited this division from being saved:</h2>
+      <ul>
+      <% division.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="row mx-0 px-5">
+    <div class="container pb-5 px-5">
+      <div class="mb-3 row">
+        <%= form.label :nama_divisi, 'Nama Divisi', class: "col-sm-4 col-form-label"  %>
+        <div class="col-sm-8">
+          <%= form.text_field :nama_divisi, class: "form-control" %>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12 col-sm-offset-2 mb-3">
+          <%= link_to 'Kembali', divisions_path, class: 'btn btn-secondary pull-left btn-custom rounded-pill' %>
+          <button type=Save class="btn btn-primary text-white btn-custom rounded-pill pull-right">Simpan</button>
+        </div>
+      </div>
+     
+    <% end %>
+    </div>
+  </div>
+</div>

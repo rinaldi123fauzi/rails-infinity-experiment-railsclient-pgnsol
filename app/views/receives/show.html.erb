@@ -1,0 +1,51 @@
+<h1 class="my-5 text-center font-weight-bolder text-primary">Penerimaan Barang</h1>
+
+  <div class="row mx-5 mb-3">
+    <div class="col-12">
+      <div class="navbar navbar-expand-sm menu-bar">
+<!--        <ul class="navbar-nav border-bottom border-top w-100">-->
+<!--          <li class="nav-item active">-->
+<!--            <a class="nav-link" href="#">Data</a>-->
+<!--          </li>-->
+<!--          <li class="nav-item">-->
+            <%#= link_to receives_path, class:"nav-link" do %>
+<!--              <span>Barang</span>-->
+            <%# end %>
+<!--          </li>-->
+<!--        </ul>-->
+       <ul class="nav navbar-nav border-bottom border-top w-100" id="myTab" role="tablist">
+          <li class="nav-item active" role="presentation">
+            <a class="nav-link" id="receive-tab" data-toggle="tab" href="#receive-home" role="tab" aria-controls="receive-home" aria-selected="true" value="data">Data</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" id="receive-item-tab" data-toggle="tab" href="#receive-item" role="tab" aria-controls="receive-item" aria-selected="false" value="barang">Barang</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" id="receive-item-tab" data-toggle="tab" href="#detail_status" role="tab" aria-controls="detail_status" aria-selected="false" value="detail">Detail Status</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+<div class="tab-content" id="myTabContent">
+
+  <%= render 'receives/tab_bars/data' %>
+
+  <%= render 'receives/tab_bars/barang' %>
+
+  <%= render 'receives/tab_bars/detail_status' %>
+
+  <br>
+  <div class="d-grid gap-2 d-md-flex mx-5 mb-3 justify-content-md-end">
+    <%= render "receives/disposisi/admin_persediaan" %>
+  </div>
+  <%= render "receives/disposisi/kadep_persediaan" %>
+  <%= render "receives/disposisi/staff_gudang" %>
+  <%= render "receives/disposisi/kepala_gudang" %>
+
+</div>
+
+<script>
+  $('#datatable-history').dataTable();
+</script>

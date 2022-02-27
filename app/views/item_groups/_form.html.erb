@@ -1,0 +1,30 @@
+<%= form_with(model: item_group, local: true) do |form| %>
+  <% if item_group.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(item_group.errors.count, "error") %> prohibited this item_group from being saved:</h2>
+
+      <ul>
+      <% item_group.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  
+    <div class="container py-4 px-5">
+
+      <div class="mb-3 row">
+        <%= form.label :kelompok_barang, class: "col-sm-4 col-form-label"  %>
+        <div class="col-sm-8">
+          <%= form.text_field :kelompok_barang, class: "form-control" %>
+        </div>
+      </div>
+   
+  <div class="row">
+      <div class="col-sm-12 mt-3">
+        <div class="float-right">
+           <button class="btn btn-primary text-white btn-custom rounded-pill" data-dismiss="modal">Simpan</button>
+          </div>
+  
+
+<% end %>

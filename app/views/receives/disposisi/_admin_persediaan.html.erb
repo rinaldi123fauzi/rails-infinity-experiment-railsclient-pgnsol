@@ -1,0 +1,71 @@
+<!--Role Admin Persediaan-->
+<% unless current_user.roles.any? { |r| r.name != 'Admin Persediaan'} %>
+    <% if @receive.status_id <= 2 || @receive.status_id == 12 %>
+        <% unless ReceiveItem.find_by_receive_id(@receive.id).nil? %>
+            <%= form_for(@receive, html: {class: "form-horizontal animated fadeInRight", role: "form", :id => "formvalidate-admin"}) do |form| %>
+                <% if @receive.errors.any? %>
+                <div id="error_explanation">
+                    <h2><%= pluralize(receive.errors.count, "error") %> prohibited this receive from being saved:</h2>
+                    <ul>
+                    <% receive.errors.full_messages.each do |message| %>
+                        <li><%= message %></li>
+                    <% end %>
+                    </ul>
+                </div>
+                <% end %>
+                <%= form.hidden_field :status_id, :value => 3 %>
+                <%= form.hidden_field :id_role, :value => 3 %>
+                <button class="btn btn-success btn-custom rounded-pill" type="submit">Submit</button>
+            <% end %>
+        <% end %>
+    <% elsif @receive.status_id == 11 %>
+        <% unless ReceiveItem.find_by_receive_id(@receive.id).nil? %>
+            <%= form_for :receive_process, url: receive_process_confirmRejectKepalaGudangByAdmin_path, method: :post, html: {class: "form-horizontal", role: "form", :id => "formvalidate-admin"} do |form| %>
+                <% if @receive.errors.any? %>
+                <div id="error_explanation">
+                    <h2><%= pluralize(receive.errors.count, "error") %> prohibited this receive from being saved:</h2>
+                    <ul>
+                    <% receive.errors.full_messages.each do |message| %>
+                        <li><%= message %></li>
+                    <% end %>
+                    </ul>
+                </div>
+                <% end %>
+                <input type="hidden" name="receive_id" value="<%= params[:id] %>">
+                <input type="hidden" name="status_id" value="7">
+                <input type="hidden" name="id_role" value="5">
+                <button class="btn btn-success btn-custom rounded-pill" type="submit">Submit</button>
+            <% end %>
+        <% end %>
+    <% end %>
+    <script>
+        $('#formvalidate-admin').submit(function (e, params) {
+            var localParams = params || {};
+
+            if (!localParams.send) {
+                e.preventDefault();
+            }
+
+                    //additional input validations can be done hear
+
+            swal({
+                    title: "Konfirmasi",
+                    text: "Anda yakin submit data ini ?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#6A9944",
+                    confirmButtonText: "Iya",
+                    cancelButtonText: "Tidak",
+                    closeOnConfirm: true
+                }, function (isConfirm) {
+                    if (isConfirm) {
+                        $(e.currentTarget).trigger(e.type, { 'send': true });
+                    } else {
+
+                //additional run on cancel  functions can be done hear
+
+                    }
+            });
+        });
+    </script>
+<% end %>

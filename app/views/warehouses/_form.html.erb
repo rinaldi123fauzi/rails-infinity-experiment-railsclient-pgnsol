@@ -1,0 +1,44 @@
+<%= form_with(model: warehouse, local: true) do |form| %>
+  <% if warehouse.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(warehouse.errors.count, "error") %> prohibited this warehouse from being saved:</h2>
+
+      <ul>
+      <% warehouse.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="row mx-0 px-5">
+    <div class="container py-4 px-5">
+
+      <div class="mb-3 row">
+        <%= form.label :nama_gudang, class: "col-sm-4 col-form-label" %>
+        <div class="col-sm-8">
+          <%= form.text_field :nama_gudang, class: "form-control"%>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <%= form.label :inisial, class: "col-sm-4 col-form-label" %>
+        <div class="col-sm-8">
+          <%= form.text_field :inisial, class: "form-control"%>
+        </div>
+      </div>
+
+      <div class="mb-4 row">
+        <%= form.label :alamat_gudang, class: "col-sm-4 col-form-label"%>
+        <div class="col-sm-8">
+          <%= form.text_area :alamat_gudang, class: "form-control"%>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="float-right">
+            <button class="btn btn-primary text-white btn-custom rounded-pill" type="submit">Simpan</button>
+          </div>
+
+<% end %>

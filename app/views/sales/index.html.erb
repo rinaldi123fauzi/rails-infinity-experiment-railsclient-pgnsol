@@ -1,0 +1,128 @@
+<h1 class="my-5 text-center font-weight-bold text-primary">Pengeluaran Barang Penjualan</h1>
+
+  <% if current_user.roles.any? { |r| r.name == "superadmin" || r.name == "User Trading" || r.name == "Admin Persediaan" } %>
+    <div class="row mb-4">
+      <div class="col-12 mt-3 d-flex justify-content-right">
+        <%= link_to new_sale_path, class:"btn btn-primary btn-custom rounded-pill text" do %>
+          <i id="my-icon" class="fas fa-plus"></i>
+          <span>Pengeluaran</span>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+<div class="row mx-0 px-2">
+
+  <div class="table-responsive">
+    <table class="table table-bordered" id="dataTable">
+      <thead class="bg-primary">
+      <tr class="text-center">
+        <th class="align-middle" style="width: 13%;">Nomor Pengeluaran</th>
+        <th class="align-middle" style="width: 14%;">Tanggal Pengeluaran</th>
+        <th class="align-middle" id="keperluan_pengeluaran" style="width: 15%;">Keterangan Penjualan</th>
+        <th class="align-middle" style="width: 15%;">Status</th>
+        <th class="align-middle" style="width: 10%;">Inputer</th>
+        <th class="align-middle" style="width: 20%;">Aksi</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% if current_user.roles.any? { |r| r.name.match(/(Kadep Persediaan|Admin Persediaan|User Trading)/)} %>
+        <% @sales.each do |sale| %>
+          <%# warehouse = Warehouse.find_by(id: sale.warehouse) %>
+          <% status = Status.find_by(id: sale.status) %>
+          <% user = User.find_by(id: sale.user_id) %>
+        <tr>
+          <td class="align-middle text-center"> <%= sale.nomor_penjualan %> </td>
+          <td class="align-middle text-center"> <%= sale.tanggal_penjualan %> </td>
+          <td class="align-middle text-center"> <%= sale.catatan_penjualan %> </td>
+          <td class="align-middle text-center">
+            <% if status.try(:nama_status) == "draft" || status.try(:kategori) == "pending"%>
+              <button class='btn btn-warning btn-sm py-1 mb-1 px-2' style="color: black;" disabled>
+                <%= status.try(:nama_status) %>
+              </button>
+            <% elsif status.try(:kategori) == "reject" %>
+              <button class='btn btn-danger btn-sm py-1 mb-1 px-2' style="color: black;" disabled>
+                <%= status.try(:nama_status) %>
+              </button>
+            <% else%>
+              <button class='btn btn-success btn-sm py-1 mb-1 px-2' style="color: black;" disabled>
+                <%= status.try(:nama_status) %>
+              </button>
+            <% end %>
+            </td>
+          <td class="align-middle text-center"><%= user.try(:name) %> | <%= sale.nama_inputer %></td>
+          <td class="align-middle text-center">
+            <%= link_to sale,  class:"btn btn-info btn-sm rounded-circle text-white py-1 mb-1 px-2" do  %>
+              <i class="fas fa-eye"></i>
+            <% end %>
+            <% if current_user.roles.any? { |r| r.name == "superadmin" || r.name == "User Trading" } %>
+          <%= link_to edit_sale_path(sale),  class:"btn btn-warning btn-sm rounded-circle text-white py-1 mb-1 px-2" do  %>
+              <i class="fas fa-pencil-alt"></i>
+            <% end %>
+              <% end %>
+            <% if current_user.roles.any? { |r| r.name == "superadmin" || r.name == "User Trading" } %>
+            <%= link_to sale, method: :delete, class:"btn btn-danger btn-sm rounded-circle text-white py-1 mb-1 px-2", data: { confirm: 'Are you sure?' } do %>
+              <i class="fas fa-trash"></i>
+            <% end %>
+              <% end %>
+            <% if current_user.roles.any? { |r| r.name == "superadmin" || r.name == "Kepala Gudang"  || r.name == "Admin Persediaan" || r.name == "Kepala Persediaan" } %>
+          <%= link_to sale, method: :delete, class:"btn btn-dark btn-sm rounded-circle text-white py-1 mb-1 px-2", data: { confirm: 'Are you sure?' } do %>
+              <i class="fas fa-download"></i>
+              <% end %>
+            <% end %>
+          </td>
+        <% end %>
+      <% elsif current_user.roles.any? { |r| r.name.match(/(Staff Gudang|Kepala Gudang)/)} %>
+        <% @sales.each do |sale| %>
+          <%# warehouse = Warehouse.find_by(id: sale.warehouse) %>
+          <% status = Status.find_by(id: sale.sale.status) %>
+          <% user = User.find_by(id: sale.sale.user_id) %>
+        <tr>
+          <td class="align-middle text-center"> <%= sale.sale.nomor_penjualan %> </td>
+          <td class="align-middle text-center"> <%= sale.sale.tanggal_penjualan %> </td>
+          <td class="align-middle text-center"> <%= sale.sale.catatan_penjualan %> </td>
+          <td class="align-middle text-center">
+            <% if status.try(:nama_status) == "draft" || status.try(:kategori) == "pending"%>
+              <button class='btn btn-warning btn-sm py-1 mb-1 px-2' style="color: black;" disabled>
+                <%= status.try(:nama_status) %>
+              </button>
+            <% elsif status.try(:kategori) == "reject" %>
+              <button class='btn btn-danger btn-sm py-1 mb-1 px-2' style="color: black;" disabled>
+                <%= status.try(:nama_status) %>
+              </button>
+            <% else%>
+              <button class='btn btn-success btn-sm py-1 mb-1 px-2' style="color: black;" disabled>
+                <%= status.try(:nama_status) %>
+              </button>
+            <% end %>
+            </td>
+          <td class="align-middle text-center"><%= user.try(:name) %> | <%= sale.sale.nama_inputer %></td>
+          <td class="align-middle text-center">
+            <%= link_to sale_path(sale.sale_id),  class:"btn btn-info btn-sm rounded-circle text-white py-1 mb-1 px-2" do  %>
+              <i class="fas fa-eye"></i>
+            <% end %>
+            <% if current_user.roles.any? { |r| r.name == "superadmin" || r.name == "User Trading" } %>
+          <%= link_to edit_sale_path(sale.sale_id),  class:"btn btn-warning btn-sm rounded-circle text-white py-1 mb-1 px-2" do  %>
+              <i class="fas fa-pencil-alt"></i>
+            <% end %>
+              <% end %>
+            <% if current_user.roles.any? { |r| r.name == "superadmin" || r.name == "User Trading" } %>
+            <%= link_to sale_path(sale.sale_id), method: :delete, class:"btn btn-danger btn-sm rounded-circle text-white py-1 mb-1 px-2", data: { confirm: 'Are you sure?' } do %>
+              <i class="fas fa-trash"></i>
+            <% end %>
+              <% end %>
+            <% if current_user.roles.any? { |r| r.name == "superadmin" || r.name == "Kepala Gudang"  || r.name == "Admin Persediaan" || r.name == "Kepala Persediaan" } %>
+          <%= link_to sale_path(sale.sale_id), method: :delete, class:"btn btn-dark btn-sm rounded-circle text-white py-1 mb-1 px-2", data: { confirm: 'Are you sure?' } do %>
+              <i class="fas fa-download"></i>
+              <% end %>
+            <% end %>
+          </td>
+        <% end %>
+      <% end %>
+      </tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+<br>

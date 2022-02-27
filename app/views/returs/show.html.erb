@@ -1,0 +1,137 @@
+<h1 class="my-5 text-center font-weight-bold text-primary" >Data Retur</h1>
+
+<div class="row mx-0 px-5">
+  <div class="container pb-5 px-5">
+    <div class="mb-3 row">
+      <label for="" class="col-sm-4 col-form-label">Jenis Penerimaan</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" value="<%= @retur.jenis_penerimaan %>" readonly>
+      </div>
+    </div>
+    <div class="mb-3 row">
+      <label for="" class="col-sm-4 col-form-label">No Pengeluaran</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" value="<%= @retur.no_pengeluaran %>" readonly>
+      </div>
+    </div>
+    <div class="mb-3 row">
+      <label for="" class="col-sm-4 col-form-label">Kode Proyek</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" value="<%= @retur.kode_proyek %>" readonly>
+      </div>
+    </div>
+    <div class="mb-3 row">
+      <label for="" class="col-sm-4 col-form-label">Nama Proyek</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" value="<%= @retur.nama_proyek %>" readonly>
+      </div>
+    </div>
+    <div class="mb-3 row">
+      <label for="" class="col-sm-4 col-form-label">Jenis pengeluaran</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" value="<%= @retur.jenis_pengeluaran %>" readonly>
+      </div>
+    </div>
+    <div class="mb-3 row">
+      <label for="" class="col-sm-4 col-form-label">Asal Gudang</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" value="<%= @retur.asal_gudang %>" readonly>
+      </div>
+    </div>
+    <div class="mb-3 row">
+      <label for="" class="col-sm-4 col-form-label">Gudang Pengembalian</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" value="<%= @retur.gudang_pengembalian %>" readonly>
+      </div>
+    </div>
+    <div class="mb-3 row">
+      <label for="" class="col-sm-4 col-form-label">Nama Inputer</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" value="<%= @retur.nama_inputer %>" readonly>
+      </div>
+    </div>
+    <div class="mb-3 row">
+      <label for="uploadFile" class="col-sm-4 col-form-label">Upload File</label>
+      <div class="col-sm-8">
+
+ <% if @retur.file.blank? %>
+            <h5 class="text-danger">tidak ada dokumen yg di upload</h5>
+            <%  else  %>
+              <% @retur.file.each do |d|  %>
+                <%=  text_field :retur, :file, multiple: true, value: d.identifier, class:"form-control", :readonly => true  %>
+                <%=  link_to "Download disini", @retur.file[0].url, :target => "_blank"  %>
+              <%  end  %>
+            <%  end %>
+
+      </div>
+    </div>
+    <div class="mb-3 row">
+      <label for="" class="col-sm-4 col-form-label">Keterangan Retur</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" value="<%= @retur.keterangan_retur %>" readonly>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12 col-sm-offset-2 mb-3">
+        <%= link_to 'Kembali', returs_path, class: 'btn btn-secondary pull-left btn-custom rounded-pill' %>
+        <%= link_to 'Edit', edit_retur_path(@retur), class:"btn btn-warning text-white btn-custom rounded-pill pull-right" %>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- <div>
+  <p>
+    <strong>Jenis penerimaan:</strong>
+    <%#= @retur.jenis_penerimaan %>
+  </p>
+
+  <p>
+    <strong>No Pengeluaran:</strong>
+    <%#= @retur.no_pengeluaran %>
+  </p>
+
+  <p>
+    <strong>Kode proyek:</strong>
+    <%#= @retur.kode_proyek %>
+  </p>
+
+  <p>
+    <strong>Nama proyek:</strong>
+    <%#= @retur.nama_proyek %>
+  </p>
+
+  <p>
+    <strong>Jenis pengeluaran:</strong>
+    <%#= @retur.jenis_pengeluaran %>
+  </p>
+
+  <p>
+    <strong>Asal gudang:</strong>
+    <%#= @retur.asal_gudang %>
+  </p>
+
+  <p>
+    <strong>Gudang pengembalian:</strong>
+    <%#= @retur.gudang_pengembalian %>
+  </p>
+
+  <p>
+    <strong>Nama inputer:</strong>
+    <%#= @retur.nama_inputer %>
+  </p>
+
+  <p>
+    <strong>File:</strong>
+    <%#= @retur.file %>
+  </p>
+
+  <p>
+    <strong>Keterangan retur:</strong>
+    <%#= @retur.keterangan_retur %>
+  </p>
+
+</div> -->
+
+<%#= link_to 'Edit', edit_retur_path(@retur) %>
+<%#= link_to 'Back', returs_path %>

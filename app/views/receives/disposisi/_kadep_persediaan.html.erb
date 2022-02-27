@@ -1,0 +1,74 @@
+<% unless current_user.roles.any? { |r| r.name != 'Kadep Persediaan'}%>
+    <%@receive = Receive.find(params[:id])%>
+    <% unless @receive.status_id != 4 %>
+        <div class="row mb-3 px-2">
+            <div class="col p-2 pl-4 bg-gradient-primary text-white">
+                <h5>Status Penerimaan Material</h5>
+            </div>
+        </div>
+
+        <%= form_for :receive_process, url: receive_process_setStatus_path, method: :post, html: {class: "form-horizontal", role: "form", :id => "formvalidate-kadep"} do |f|%>
+            <div class="row px-5 g-2 mx-5 mb-2" id="riwayat-permintaan">
+                <div class="col-2">
+                    Catatan :
+                </div>
+                <input type="hidden" name="receive_id" value="<%= params[:id] %>">
+                <div class="col-10">
+                    <textarea class="form-control" name="catatan_penerimaan" rows="4" required><%= @setStatusBaca.try(:catatan_penerimaan) %></textarea>
+                </div>
+                
+                <div class="col-2 mb-2 my-3">
+                    Status :
+                </div>
+                <div class="col-10 my-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="status" id="status-validate" value="Approved">
+                        <label class="form-check-label">
+                        Approved
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="status" id="status-validate" value="Rejected">
+                        <label class="form-check-label">
+                        Rejected
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="d-grid gap-2 d-md-flex px-5 mx-5 mb-4 justify-content-md-end">
+                <input type="submit" class="btn btn-success btn-custom rounded-pill" value="Submit">
+            </div>
+        <% end %>
+    <% end %>
+    <script>
+        document.getElementById("status-validate").required = true;
+        $('#formvalidate-kadep').submit(function (e, params) {
+            var localParams = params || {};
+
+            if (!localParams.send) {
+                e.preventDefault();
+            }
+
+                    //additional input validations can be done hear
+
+            swal({
+                    title: "Konfirmasi",
+                    text: "Anda yakin submit data ini ?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#6A9944",
+                    confirmButtonText: "Iya",
+                    cancelButtonText: "Tidak",
+                    closeOnConfirm: true
+                }, function (isConfirm) {
+                    if (isConfirm) {
+                        $(e.currentTarget).trigger(e.type, { 'send': true });
+                    } else {
+
+                //additional run on cancel  functions can be done hear
+
+                    }
+            });
+        });
+    </script>
+<% end %>

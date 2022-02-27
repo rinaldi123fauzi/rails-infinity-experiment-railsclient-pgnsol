@@ -1,0 +1,36 @@
+<% unless notice.blank? %>
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  <strong id="notice"><%= notice %></strong>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<% end %>
+
+<h1>Receive Items</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Receive</th>
+      <th>Item</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @receive_items.each do |receive_item| %>
+      <tr>
+        <td><%= receive_item.receive %></td>
+        <td><%= receive_item.item %></td>
+        <td><%= link_to 'Show', receive_item %></td>
+        <td><%= link_to 'Edit', edit_receive_item_path(receive_item) %></td>
+        <td><%= link_to 'Destroy', receive_item, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Receive Item', new_receive_item_path %>

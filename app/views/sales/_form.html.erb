@@ -1,0 +1,534 @@
+<%= form_with(model: sale, local: true) do |form| %>
+  <% if sale.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(sale.errors.count, "error") %> prohibited this expenditure from being saved:</h2>
+      <ul>
+      <% sale.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="row mx-0 px-5">
+    <div class="container py-4 px-5">
+
+      <div class="mb-3 row">
+        <%= form.label :tanggal_penjualan, "Tanggal Pengeluaran", class: "col-sm-4 col-form-label font-weight-bolder" %>
+        <div class="col-sm-8">
+          <%= form.date_field :tanggal_penjualan, class:"form-control", :required => true, :oninvalid =>
+            "this.setCustomValidity('Tanggal Pengeluaran Perlu Di Isi')", :oninput =>"setCustomValidity('')" %>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <%= form.label :pilih_kode, "Pilih Kode", class: "col-sm-4 col-form-label font-weight-bolder" %>
+        <div class="col-sm-8">
+          <% if @sale.new_record? %>
+            <input type="radio" value="project" name="sale[kategori_kode]" id="pilih-kode">
+            <label>Kode Proyek</label>
+            <input type="radio" value="program" name="sale[kategori_kode]" id="pilih-kode">
+            <label>Kode Program</label>
+          <% else %>
+            <% if @sale.kategori_kode.match(/^project$/) %>
+              <input type="radio" value="project" class="messageCheckbox" name="sale[kategori_kode]" id="pilih-kode" checked>
+              <label>Kode Proyek</label>
+              <input type="radio" value="program" class="messageCheckbox" name="sale[kategori_kode]" id="pilih-kode">
+              <label>Kode Program</label>
+            <% elsif @sale.kategori_kode.match(/^program$/) %>
+              <input type="radio" value="project" class="messageCheckbox" name="sale[kategori_kode]" id="pilih-kode">
+              <label>Kode Proyek</label>
+              <input type="radio" value="program" class="messageCheckbox" name="sale[kategori_kode]" id="pilih-kode" checked>
+              <label>Kode Program</label>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="kode_proyek mb-3 row">
+        <%= form.label :kode_proyek, class: "col-sm-4 col-form-label font-weight-bolder" %>
+        <div class="col-sm-8">
+          <select data-placeholder="Pilih Kode Proyek" class="form-control selectProject" name="sale[kode_proyek]" id="kode-proyek" data-live-search="true" onclick="select_project()">
+            <% if @sale.new_record? %>
+              <%= raw(getProjectOrProgramPenerimaan("project"))%>
+            <% else %>
+               <% if @sale.kode_proyek.present? %>
+                  <%= raw(getProjectOrProgramPenerimaanParams(@sale.kode_proyek, "project"))%>
+                <% else %>
+                  <%= raw(getProjectOrProgramPenerimaan("project"))%>
+                <% end %>
+            <% end %>
+          </select>
+        </div>
+      </div>
+
+      <div class="mb-3 row kode_program">
+        <%= form.label :kode_proyek, "Kode Program", class: "col-sm-4 col-form-label font-weight-bolder" %>
+        <div class="col-sm-8">
+          <select data-placeholder="Pilih Kode Program" class="form-control selectProgram" name="sale[kode_proyek]" id="kode-program" data-live-search="true" onclick="select_benef()">
+              <% if @sale.new_record? %>
+                <%= raw(getProjectOrProgramPenerimaan("program"))%>
+              <% else %>
+                <% if @sale.kode_proyek.present? %>
+                  <%= raw(getProjectOrProgramPenerimaanParams(@sale.kode_proyek, "program"))%>
+                <% else %>
+                  <%= raw(getProjectOrProgramPenerimaan("program"))%>
+                <% end %>
+              <% end %>
+          </select>
+        </div>
+          
+      </div>
+      <%= form.hidden_field :kode_proyek, :id => "kode_project_atau_program" %>
+
+      <div class="mb-3 row nama_proyek">
+        <%= form.label :nama_proyek, "Nama Proyek", class: "col-sm-4 col-form-label font-weight-bolder" %>
+        <div class="col-sm-8">
+          <%= form.text_field :nama_proyek, class: "form-control nama-proyek", :readonly => true %>
+        </div>
+      </div>
+
+      <div class="mb-3 row nama_program">
+        <%= form.label :nama_program, "Nama Program", class: "col-sm-4 col-form-label font-weight-bolder" %>
+        <div class="col-sm-8">
+          <%= form.text_field :nama_proyek, class: "form-control nama-program", :readonly => true %>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <%= form.label :jenis_pengeluaran, "Jenis Pengeluaran", class: "col-sm-4 col-form-label font-weight-bolder" %>
+        <div class="col-sm-8">
+          <%= form.text_field :jenis_pengeluaran, class:"form-control", :value => 'Penjualan', :readonly => true %>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <%= form.label :nama_inputer, "Nama Inputer", class: "col-sm-4 col-form-label font-weight-bolder" %>
+        <div class="col-sm-8">
+          <%= form.text_field :nama_inputer, class:"form-control" %>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <%= form.label :kode_akun, "Kode Akun", class: "col-sm-4 col-form-label font-weight-bolder" %>
+        <div class="col-sm-8">
+          <%#= select_tag "select_supply_account", options_for_select(getAkunPersediaan()), :class => "form-control selectKodeAkun" %>
+          <%= form.text_field :kode_akun, class: "form-control kode-akun", readonly: true %>
+          <%#= form.hidden_field :kode_akun, id: "kode-akun-id" %>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <%= form.label :nama_akun, "Nama Akun", class: "col-sm-4 col-form-label font-weight-bolder" %>
+        <div class="col-sm-8">
+          <%= form.text_field :nama_akun, class:"form-control nama_akun", readonly: true %>
+        </div>
+      </div>
+
+      <div class="mb-3 row" id="">
+        <%= form.label :catatan_penjualan, "Keterangan Pengeluaran", class: "col-sm-4 col-form-label font-weight-bolder" %>
+        <div class="col-sm-8">
+          <%= form.text_area :catatan_penjualan, class:"form-control", :required => true, :oninvalid =>
+            "this.setCustomValidity('Catatan Penjualan perlu di isi')", :oninput =>"setCustomValidity('')" %>
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <%= form.label :dokumen_penjualan, "Dokumen Penjualan", class: "col-sm-4 col-form-label font-weight-bolder" %>
+        <div class="col-sm-8">
+          <%= form.file_field :dokumen_penjualan, class: "form-control", accept:".pdf", multiple: true %>
+        </div>
+      </div>
+
+      <!--Start Hidden Fields Section-->
+      <%= form.hidden_field :user_id, id:'user_id', :value => current_user.id %>
+      <%= form.hidden_field :status_id, id:'status_id', :value => 15 %>
+      <%= form.hidden_field :receive_id, id:'receive_id' %>
+      <%= form.hidden_field :nomor_penjualan, id:'nomor_penjualan_id', :value => @sale_code %>
+      <!--Finish Hidden Fields Section-->
+
+      <div class="col-sm-12">
+        <div class="mb-3 float-right">
+          <input type="reset" value="Reset Data" class="btn btn-danger text-white btn-custom rounded-pill">
+          <button class="btn btn-primary text-white btn-custom rounded-pill" data-dismiss="modal">Simpan</button>
+        </div>
+
+<% end %>
+
+<script type="text/javascript">
+  $('.selectProject').select2();
+  $('.selectProgram').select2();
+
+  function resetprojectCodeData() {
+    $(".nama-program").val('');
+    $(".nama-proyek").val('');
+    $(".kode-akun").val('');
+    $(".nama_akun").val('');
+  }
+
+  select_benef();
+  function select_benef() {
+      $('.selectProgram').change(function(){
+      $('#kode_project_atau_program').val('');
+        if ($(this).val() !== '') {
+            var id = $(this).val();
+            const myArray = id.split(" | ");
+            const forId = id.split(" ^ ");
+            $('#receive_id').val(forId[1]);
+            var id_program = myArray[0];
+            $('#kode_project_atau_program').val(id_program);
+            $.getJSON("/sales/" +id_program+ "/getNamaProjekOrProgram",
+              function ( callback ) {
+                if (callback != "error"){
+                  // console.log(callback)
+                  for (var i = 0; i < callback.length; i++){
+                    var obj = callback[i];
+                      if (obj == null){
+                        $(".nama-program").empty();
+                        $(".kode-akun").empty();
+                      } else{
+                        $(".nama-program").empty();
+                        var nama_program = obj['value']
+                            // ...use `element`...
+                        $(".nama-program").val(nama_program);
+
+                        $(".kode-akun").empty();
+                        var kode_akun = obj['kode_akun']
+                            // ...use `element`...
+                        $(".kode-akun").val(kode_akun);
+
+                        $.getJSON("/sales/" +kode_akun+ "/getNamaAkun",
+                          function ( callback ) {
+                            if (callback != "error"){
+                              // console.log(callback)
+                              for (var i = 0; i < callback.length; i++){
+                                var obj = callback[i];
+                                  if (obj == null){
+                                    $(".nama_akun").empty();
+                                  } else{
+                                    $(".nama_akun").empty();
+                                    var nama_akun = obj['value']
+                                        // ...use `element`...
+                                    $(".nama_akun").val(nama_akun);
+                                  }
+                              }
+                            }
+                          });
+                      }
+                  }
+                }
+              });
+        }
+      });
+  }
+
+  select_project();
+  function select_project() {
+    $('.selectProject').change(function(){
+      $('#kode_project_atau_program').val('');
+      if ($(this).val() !== '') {
+        var id = $(this).val();
+        const myArray = id.split(" | ");
+        const forId = id.split(" ^ ");
+        $('#receive_id').val(forId[1]);
+        var id_proyek = myArray[0];
+        $('#kode_project_atau_program').val(id_proyek);
+        $.getJSON("/sales/" +id_proyek+ "/getNamaProjekOrProgram",
+          function ( callback ) {
+            if (callback != "error"){
+              // console.log(callback)
+              for (var i = 0; i < callback.length; i++){
+                var obj = callback[i];
+                  if (obj == null){
+                    $(".nama-proyek").empty();
+                    $(".kode-akun").empty();
+                  } else{
+                    $(".nama-proyek").empty();
+                    var nama_proyek = obj['value']
+                        // ...use `element`...
+                    $(".nama-proyek").val(nama_proyek);
+
+                    $(".kode-akun").empty();
+                    var kode_akun = obj['kode_akun']
+                        // ...use `element`...
+                    $(".kode-akun").val(kode_akun);
+
+                    $.getJSON("/sales/" +kode_akun+ "/getNamaAkun",
+                      function ( callback ) {
+                        if (callback != "error"){
+                          // console.log(callback)
+                          for (var i = 0; i < callback.length; i++){
+                            var obj = callback[i];
+                              if (obj == null){
+                                $(".nama_akun").empty();
+                              } else{
+                                $(".nama_akun").empty();
+                                var nama_akun = obj['value']
+                                    // ...use `element`...
+                                $(".nama_akun").val(nama_akun);
+                              }
+                          }
+                        }
+                      });
+                  }
+              }
+            }
+          });
+        }
+    });
+  }
+
+  function fileValidationpdf() {
+    var fileInput = document.getElementById('nama_file');
+    var filePath = fileInput.value;
+    var allowedExtensions = /(\.pdf)$/i;
+    if (!allowedExtensions.exec(filePath)) {
+        alert('Please upload file having extensions .pdf only.');
+        fileInput.value = '';
+        return false;
+    } else {
+        //Image preview
+        if (fileInput.files && fileInput.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('pdf_view').innerHTML = '<iframe src="' + e.target.result + '" style="width: 100%; height: 400px;"/>';
+            };
+            render.readAsDataURL(fileInput.files[0]);
+        }
+    }
+  }
+
+  //https://www.freecodecamp.org/news/var-let-and-const-whats-the-difference/
+  jQuery(function () {
+    $("input[name='sale[kategori_kode]']").click(function() {
+        var value = $(this).val();
+        if (value == "program"){
+          resetprojectCodeData();
+          const id_program = $('.selectProgram').find(":selected").text();
+          const myArray = id_program.split(" | ");
+          const id = myArray[0];
+          if (id){
+            $.getJSON("/sales/" +id+ "/getNamaProjekOrProgram",
+              function ( callback ) {
+                if (callback != "error"){
+                  // console.log(callback)
+                  for (var i = 0; i < callback.length; i++){
+                    var obj = callback[i];
+                      if (obj == null){
+                        $(".nama-program").empty();
+                        $(".kode-akun").empty();
+                      } else{
+                        $(".nama-program").empty();
+                        var nama_proyek = obj['value']
+                            // ...use `element`...
+                        $(".nama-program").val(nama_proyek);
+
+                        $(".kode-akun").empty();
+                        var kode_akun = obj['kode_akun']
+                            // ...use `element`...
+                        $(".kode-akun").val(kode_akun);
+
+                        $.getJSON("/sales/" +kode_akun+ "/getNamaAkun",
+                          function ( callback ) {
+                            if (callback != "error"){
+                              // console.log(callback)
+                              for (var i = 0; i < callback.length; i++){
+                                var obj = callback[i];
+                                  if (obj == null){
+                                    $(".nama_akun").empty();
+                                  } else{
+                                    $(".nama_akun").empty();
+                                    var nama_akun = obj['value']
+                                        // ...use `element`...
+                                    $(".nama_akun").val(nama_akun);
+                                  }
+                              }
+                            }
+                          });
+                      }
+                  }
+                }
+              });
+          }
+          $('div.kode_program').show();
+          $('div.kode_proyek').hide();
+          $('div.nama_program').show();
+          $('div.nama_proyek').hide();
+          $('.nama-proyek').attr('disabled', true);
+          $('.nama-program').attr('disabled', false);
+          document.getElementById('kode-program').required = true;
+          document.getElementById('kode-proyek').required = false;
+        }
+        else if(value == "project"){
+          resetprojectCodeData();
+          const id_proyek = $('.selectProject').find(":selected").text();
+          const myArray = id_proyek.split(" | ");
+          const id = myArray[0];
+          if (id){
+            $.getJSON("/sales/" +id+ "/getNamaProjekOrProgram",
+              function ( callback ) {
+                if (callback != "error"){
+                  // console.log(callback)
+                  for (var i = 0; i < callback.length; i++){
+                    var obj = callback[i];
+                      if (obj == null){
+                        $(".nama-proyek").empty();
+                        $(".kode-akun").empty();
+                      } else{
+                        $(".nama-proyek").empty();
+                        var nama_proyek = obj['value']
+                            // ...use `element`...
+                        $(".nama-proyek").val(nama_proyek);
+
+                        $(".kode-akun").empty();
+                        var kode_akun = obj['kode_akun']
+                            // ...use `element`...
+                        $(".kode-akun").val(kode_akun);
+
+                        $.getJSON("/sales/" +kode_akun+ "/getNamaAkun",
+                          function ( callback ) {
+                            if (callback != "error"){
+                              // console.log(callback)
+                              for (var i = 0; i < callback.length; i++){
+                                var obj = callback[i];
+                                  if (obj == null){
+                                    $(".nama_akun").empty();
+                                  } else{
+                                    $(".nama_akun").empty();
+                                    var nama_akun = obj['value']
+                                        // ...use `element`...
+                                    $(".nama_akun").val(nama_akun);
+                                  }
+                              }
+                            }
+                          });
+                      }
+                  }
+                }
+              });
+          }
+          $('div.kode_program').hide();
+          $('div.kode_proyek').show();
+          $('div.nama_program').hide();
+          $('div.nama_proyek').show();
+          $('.nama-proyek').attr('disabled', false);
+          $('.nama-program').attr('disabled', true);
+          document.getElementById('kode-program').required = false;
+          document.getElementById('kode-proyek').required = true;
+        }
+    });
+
+    $('.kode_program').hide();
+    $('.kode_proyek').hide();
+    $('.nama_program').hide();
+    $('.nama_proyek').hide();
+    document.getElementById('kode-program').required = false;
+    document.getElementById('kode-proyek').required = false;
+    document.getElementById("pilih-kode").required = true;
+
+    var checked = $('#pilih-kode:checked').val();
+    if (checked == "project"){
+      var id_proyek = $('.selectProject').val();
+      var myArray = id_proyek.split(" | ");
+      var id = myArray[0];
+      $.getJSON("/sales/" +id+ "/getNamaProjekOrProgram",
+        function ( callback ) {
+          if (callback != "error"){
+            // console.log(callback)
+            for (var i = 0; i < callback.length; i++){
+              var obj = callback[i];
+                if (obj == null){
+                  $(".nama-proyek").empty();
+                  $(".kode-akun").empty();
+                } else{
+                  $(".nama-proyek").empty();
+                  var nama_proyek = obj['value']
+                      // ...use `element`...
+                  $(".nama-proyek").val(nama_proyek);
+
+                  $(".kode-akun").empty();
+                  var kode_akun = obj['kode_akun']
+                      // ...use `element`...
+                  $(".kode-akun").val(kode_akun);
+
+                  $.getJSON("/sales/" +kode_akun+ "/getNamaAkun",
+                    function ( callback ) {
+                      if (callback != "error"){
+                        // console.log(callback)
+                        for (var i = 0; i < callback.length; i++){
+                          var obj = callback[i];
+                            if (obj == null){
+                              $(".nama_akun").empty();
+                            } else{
+                              $(".nama_akun").empty();
+                              var nama_akun = obj['value']
+                                  // ...use `element`...
+                              $(".nama_akun").val(nama_akun);
+                            }
+                        }
+                      }
+                    });
+                }
+            }
+          }
+        });
+      $('div.kode_program').hide();
+      $('div.kode_proyek').show();
+      $('div.nama_program').hide();
+      $('div.nama_proyek').show();
+      document.getElementById('kode-program').required = false;
+      document.getElementById('kode-proyek').required = true;
+    }else if (checked == "program"){
+      var id_program = $('.selectProgram').val();
+      var myArray = id_program.split(" | ");
+      var id = myArray[0];
+      $.getJSON("/sales/" +id+ "/getNamaProjekOrProgram",
+        function ( callback ) {
+          if (callback != "error"){
+            // console.log(callback)
+            for (var i = 0; i < callback.length; i++){
+              var obj = callback[i];
+                if (obj == null){
+                  $(".nama-proyek").empty();
+                  $(".kode-akun").empty();
+                } else{
+                  $(".nama-proyek").empty();
+                  var nama_proyek = obj['value']
+                      // ...use `element`...
+                  $(".nama-proyek").val(nama_proyek);
+
+                  $(".kode-akun").empty();
+                  var kode_akun = obj['kode_akun']
+                      // ...use `element`...
+                  $(".kode-akun").val(kode_akun);
+
+                  $.getJSON("/sales/" +kode_akun+ "/getNamaAkun",
+                    function ( callback ) {
+                      if (callback != "error"){
+                        // console.log(callback)
+                        for (var i = 0; i < callback.length; i++){
+                          var obj = callback[i];
+                            if (obj == null){
+                              $(".nama_akun").empty();
+                            } else{
+                              $(".nama_akun").empty();
+                              var nama_akun = obj['value']
+                                  // ...use `element`...
+                              $(".nama_akun").val(nama_akun);
+                            }
+                        }
+                      }
+                    });
+                }
+            }
+          }
+        });
+      $('div.kode_program').show();
+      $('div.kode_proyek').hide();
+      $('div.nama_program').show();
+      $('div.nama_proyek').hide();
+      document.getElementById('kode-program').required = true;
+      document.getElementById('kode-proyek').required = false;
+    }
+  });
+</script>

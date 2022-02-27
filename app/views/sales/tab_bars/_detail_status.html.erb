@@ -1,0 +1,28 @@
+<div class="tab-pane fade" id="sale_detail_status" role="tabpanel" aria-labelledby="sale_detail_status-tab">
+    <div class="row mx-0">
+      <div class="col-12">
+        <div class="table-responsive">
+          <table class="table table-bordered" id="datatable-history">
+            <thead class="bg-primary">
+            <tr class="text-center">
+              <th class="align-middle">Tanggal</th>
+              <th class="align-middle">Status</th>
+              <th class="align-middle">PIC</th>
+              <th class="align-middle">Catatan</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% SaleHistory.where(sale_id: params[:id]).order(:created_at => :desc).each do |history|%>
+              <tr>
+                <td class="align-middle" style="width:10%"><%= "#{history.created_at.strftime('%d')} #{get_month_name(history.created_at.strftime('%-m'))} #{history.created_at.strftime('%Y')}"%></td>
+                <td class="align-middle" style="width:20%"><%= history.status.nama_status %></td>
+                <td class="align-middle" style="width:10%"><%= history.user.try(:name) %></td>
+                <td class="align-middle"><%= history.catatan_penjualan %></td>
+              </tr>
+            <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+</div>

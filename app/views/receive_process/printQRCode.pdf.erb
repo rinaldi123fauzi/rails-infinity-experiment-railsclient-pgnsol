@@ -1,0 +1,51 @@
+<%
+
+    @id_receiveItem.each do |id|
+    @getTanggalBAST = ReceiveItem.find_by_id(id)
+    @tahun = Date.today.strftime("%Y") 
+    @bulan = Date.today.strftime("%m")
+    @get_id = @getTanggalBAST.id
+
+    @qrCode = "#{@bulan}#{@tahun}#{@get_id}"
+    @getTanggalBAST.update(qr_code: @qrCode)
+    @getDivision = Receive.find(@getTanggalBAST.receive_id)
+
+    # unless @getTanggalBAST.qr_code.present?
+    #   @getTanggalBAST.update(qr_code: @qrCode)
+    #   Item.update(@getTanggalBAST.item_id, {:kode_qr => @qrCode})
+    # end 
+
+    unless @getTanggalBAST.qr_code.present?
+      @qrcode = RQRCode::QRCode.new(@qrCode)
+    else
+      @qrcode = RQRCode::QRCode.new(@getTanggalBAST.qr_code)
+      @split = @getTanggalBAST.qr_code.split('.')
+    end
+    @png = @qrcode.as_png(
+      bit_depth: 1,
+      border_modules: 4,
+      color_mode: ChunkyPNG::COLOR_GRAYSCALE,
+      color: 'black',
+      file: nil,
+      fill: 'white',
+      module_px_size: 5,
+      resize_exactly_to: false,
+      resize_gte_to: false,
+      size: 123
+    )
+
+    IO.binwrite("app/assets/images/qr.png", @png.to_s)
+%>
+
+<table border="0" style="font-size: 18px;">
+    <tr>
+      <td width="30">
+        <%= image_tag wicked_pdf_asset_base64('qr.png') %> <br>
+        <%= @getTanggalBAST.try(:qr_code)%>
+      </td>
+    </tr>
+    
+    <p style="color: transparent;">......</p>
+</table>
+
+<% end %>
